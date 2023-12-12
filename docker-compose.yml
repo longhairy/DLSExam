@@ -15,3 +15,9 @@ services:
     ports:
     - 9005:80
    
+  frontend-service:
+    build:
+      context: .
+      dockerfile: Frontend/Dockerfile
+    ports:
+    - 9003:80
