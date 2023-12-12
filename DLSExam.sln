@@ -3,16 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{C80B28A5-ABEC-422F-9ADA-5D4E231A9A82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "UserService\UserService.csproj", "{C80B28A5-ABEC-422F-9ADA-5D4E231A9A82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGatewayService", "ApiGatewayService\ApiGatewayService.csproj", "{CC3BE641-7A3F-4196-900E-7FB83433C2B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGatewayService", "ApiGatewayService\ApiGatewayService.csproj", "{CC3BE641-7A3F-4196-900E-7FB83433C2B2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4145887B-D84B-4645-BCF7-6AA0781FC48B}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEnd", "FrontEnd\Frontend.csproj", "{F319F7D4-EBE4-4E06-A649-84EE93F89004}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Frontend", "FrontEnd\Frontend.csproj", "{F319F7D4-EBE4-4E06-A649-84EE93F89004}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedModels", "SharedModels\SharedModels.csproj", "{CF01AAD8-ED68-4514-8DED-F900CB90F43E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{F319F7D4-EBE4-4E06-A649-84EE93F89004}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F319F7D4-EBE4-4E06-A649-84EE93F89004}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F319F7D4-EBE4-4E06-A649-84EE93F89004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF01AAD8-ED68-4514-8DED-F900CB90F43E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF01AAD8-ED68-4514-8DED-F900CB90F43E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF01AAD8-ED68-4514-8DED-F900CB90F43E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF01AAD8-ED68-4514-8DED-F900CB90F43E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
