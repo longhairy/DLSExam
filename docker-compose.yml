@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  user-service:
+    build:
+      context: .
+      dockerfile: UserService/Dockerfile
+    deploy:
+      replicas: 1
+
