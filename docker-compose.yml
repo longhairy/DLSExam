@@ -8,3 +8,10 @@ services:
     deploy:
       replicas: 1
 
+  api-gateway-service:
+    build:
+      context: .
+      dockerfile: ApiGatewayService/Dockerfile
+    ports:
+    - 9005:80
+   
