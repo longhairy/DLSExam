@@ -8,7 +8,6 @@
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
         margin: 0;
-        display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
@@ -104,6 +103,9 @@
         })
             .then(response => {
                 if (response.ok) {
+                    setSessionCookie(email); // Set session cookie upon successful registration
+                    setSessionCookiePassword(password)
+
                     alert('Registration successful!');
                     redirectToDashboard();
                 } else {
@@ -116,6 +118,15 @@
             });
     }
 
+    function setSessionCookie(email) {
+        // Set a session cookie with the user's email
+        document.cookie = 'user_email=' + email + '; path=/';
+    }
+
+    function setSessionCookiePassword(password) {
+        // Set a session cookie with the user's email
+        document.cookie = 'user_password=' + password + '; path=/';
+    }
     function redirectToDashboard() {
         // Redirect to /Home/Dashboard
         window.location.href = '/Home/Dashboard';

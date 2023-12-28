@@ -19,23 +19,57 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                         <li class="nav-item">
+                        <!-- Check if user cookies exist to determine which buttons to display -->
+                        <li class="nav-item" id="loginBtn" style="display:none;">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" id="registerBtn" style="display:none;">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
+                        </li>
+                        <li class="nav-item" id="dashboardBtn" style="display:none;">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item" id="addBalanceBtn" style="display:none;">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AddBalance">Add Balance</a>
+                        </li>
+                        <li class="nav-item" id="logoutBtn" style="display:none;">
+                            <a class="nav-link text-dark" href="#" onclick="logout()">Logout</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
+    <script>
+        // Retrieve user email from session cookie
+        var userEmail = getCookie('user_email');
+
+        // Check if user is logged in based on the existence of user email cookie
+        if (userEmail) {
+            document.getElementById('dashboardBtn').style.display = 'inline-block';
+            document.getElementById('addBalanceBtn').style.display = 'inline-block';
+            document.getElementById('logoutBtn').style.display = 'inline-block';
+        } else {
+            document.getElementById('loginBtn').style.display = 'inline-block';
+            document.getElementById('registerBtn').style.display = 'inline-block';
+        }
+
+        function logout() {
+            // Clear user cookies
+            document.cookie = 'user_email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+            document.cookie = 'user_password=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+
+            // Redirect to the home page or perform other actions
+            window.location.href = '/Home/Index';
+        }
+
+        // Function to retrieve a cookie value by name
+        function getCookie(name) {
+            var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            if (match) return match[2];
+        }
+    </script>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

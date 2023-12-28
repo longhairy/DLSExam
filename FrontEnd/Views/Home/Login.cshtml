@@ -7,7 +7,6 @@
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
       margin: 0;
-      display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
@@ -93,6 +92,8 @@
                 }
             })
             .then(user => {
+                setSessionCookie(email); // Set session cookie upon successful login
+                setSessionCookiePassword(password)
                 alert('Login successful! Welcome, ' + user.name + '!');
                 redirectToDashboard();
             })
@@ -100,6 +101,15 @@
                 console.error('Error:', error.message);
                 alert('Login failed. User not found or incorrect password.');
             });
+    }
+
+    function setSessionCookie(email) {
+        // Set a session cookie with the user's email
+        document.cookie = 'user_email=' + email + '; path=/';
+    }
+    function setSessionCookiePassword(password) {
+        // Set a session cookie with the user's email
+        document.cookie = 'user_password=' + password + '; path=/';
     }
 
     function redirectToDashboard() {
