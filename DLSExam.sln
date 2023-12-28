@@ -13,11 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Frontend", "FrontEnd\Frontend.csproj", "{F319F7D4-EBE4-4E06-A649-84EE93F89004}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedModels", "SharedModels\SharedModels.csproj", "{CF01AAD8-ED68-4514-8DED-F900CB90F43E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouletteService", "RouletteService\RouletteService.csproj", "{92DB8523-EF7B-48BF-A588-51902EF8BD48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouletteService", "RouletteService\RouletteService.csproj", "{92DB8523-EF7B-48BF-A588-51902EF8BD48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +31,6 @@ Global
 		{CC3BE641-7A3F-4196-900E-7FB83433C2B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC3BE641-7A3F-4196-900E-7FB83433C2B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC3BE641-7A3F-4196-900E-7FB83433C2B2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F319F7D4-EBE4-4E06-A649-84EE93F89004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F319F7D4-EBE4-4E06-A649-84EE93F89004}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F319F7D4-EBE4-4E06-A649-84EE93F89004}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F319F7D4-EBE4-4E06-A649-84EE93F89004}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF01AAD8-ED68-4514-8DED-F900CB90F43E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF01AAD8-ED68-4514-8DED-F900CB90F43E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF01AAD8-ED68-4514-8DED-F900CB90F43E}.Release|Any CPU.ActiveCfg = Release|Any CPU
