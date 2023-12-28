@@ -1,150 +1,17 @@
 {
 	"info": {
-		"_postman_id": "f8cf4eaf-cb3f-446d-82e9-9820e0f4039e",
-		"name": "DLS Mandatory3",
+		"_postman_id": "47a90df7-895a-4b03-a36c-0ea8a97aceb8",
+		"name": "DLS Exam",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23496046",
-		"_collection_link": "https://blue-rocket-739466.postman.co/workspace/System-Integration~937f4ea1-10bb-4be5-8092-9a79444625e3/collection/23496046-f8cf4eaf-cb3f-446d-82e9-9820e0f4039e?action=share&source=collection_link&creator=23496046"
+		"_collection_link": "https://blue-rocket-739466.postman.co/workspace/System-Integration~937f4ea1-10bb-4be5-8092-9a79444625e3/collection/23496046-47a90df7-895a-4b03-a36c-0ea8a97aceb8?action=share&source=collection_link&creator=23496046"
 	},
 	"item": [
 		{
-			"name": "GetAddition 3 and 5",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"pm.test(\"result of 3+5 = 8\", function () {\r",
-							"    pm.response.to.have.body('8');\r",
-							"});\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
+			"name": "Get Game Types From RouletteService",
 			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:9005/post/addition?inputone=3&inputtwo=5",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9005",
-					"path": [
-						"post",
-						"addition"
-					],
-					"query": [
-						{
-							"key": "inputone",
-							"value": "3"
-						},
-						{
-							"key": "inputtwo",
-							"value": "5"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GetMultiplication 3 and 5",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"pm.test(\"result of 3*5 = 15\", function () {\r",
-							"    pm.response.to.have.body('15');\r",
-							"});\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:9005/post/multiplication?inputone=3&inputtwo=5",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9005",
-					"path": [
-						"post",
-						"multiplication"
-					],
-					"query": [
-						{
-							"key": "inputone",
-							"value": "3"
-						},
-						{
-							"key": "inputtwo",
-							"value": "5"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GetSubtraction 3 and 5",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"pm.test(\"result of 3-5 = -2\", function () {\r",
-							"    pm.response.to.have.body('-2');\r",
-							"});\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:9005/post/subtraction?inputone=3&inputtwo=5",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9005",
-					"path": [
-						"post",
-						"subtraction"
-					],
-					"query": [
-						{
-							"key": "inputone",
-							"value": "3"
-						},
-						{
-							"key": "inputtwo",
-							"value": "5"
-						}
-					]
-				}
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}
