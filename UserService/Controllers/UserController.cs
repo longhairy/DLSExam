@@ -47,5 +47,18 @@ namespace UserService.Controllers
             return Ok(usersHistory);
 
         }
+
+        [HttpGet("/get/user")]
+        public ActionResult GetUserByEmail([FromQuery] string email, [FromQuery] string password)
+        {
+            var user = userDBConnection.QueryFirstOrDefault<User>("SELECT * FROM users WHERE email = @email", new { email });
+
+            if (user != null && user.Password == password)
+            {
+                return Ok(user);
+            }
+
+            return NotFound("User not found or incorrect password");
+        }
     }
 }

@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+    }
+
+    .login-container h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #666;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .login-btn {
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .login-btn:hover {
+      background-color: #2980b9;
+    }
+  </style>
+<div class="login-container">
+    <h2>Login</h2>
+    <form class="login-form" id="loginForm">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="button" class="login-btn" onclick="loginUser()">Login</button>
+    </form>
+</div>
+
+<script>
+
+    function loginUser() {
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+
+        fetch('http://localhost:9001/get/user?email=' + email + '&password=' + password)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Login failed. User not found or incorrect password.');
+                }
+            })
+            .then(user => {
+                alert('Login successful! Welcome, ' + user.name + '!');
+                redirectToDashboard();
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+                alert('Login failed. User not found or incorrect password.');
+            });
+    }
+
+    function redirectToDashboard() {
+        // Redirect to /Home/Dashboard
+        window.location.href = '/Home/Dashboard';
+    }
+</script>
