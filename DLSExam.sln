@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedModels", "SharedModel
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouletteService", "RouletteService\RouletteService.csproj", "{92DB8523-EF7B-48BF-A588-51902EF8BD48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEnd", "FrontEnd\FrontEnd.csproj", "{4E74D29E-9D15-4A6C-B7BB-F2FD8807DA6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{92DB8523-EF7B-48BF-A588-51902EF8BD48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92DB8523-EF7B-48BF-A588-51902EF8BD48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92DB8523-EF7B-48BF-A588-51902EF8BD48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E74D29E-9D15-4A6C-B7BB-F2FD8807DA6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E74D29E-9D15-4A6C-B7BB-F2FD8807DA6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E74D29E-9D15-4A6C-B7BB-F2FD8807DA6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E74D29E-9D15-4A6C-B7BB-F2FD8807DA6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
