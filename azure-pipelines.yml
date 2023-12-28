@@ -29,6 +29,7 @@ stages:
 
     - script: |
         # Run Postman collection using Newman
+        ls
         cd $(System.DefaultWorkingDirectory)/DLSExam/Postman
         newman run DLSExam.postman_collection.json
       displayName: 'Run Postman Collection'
