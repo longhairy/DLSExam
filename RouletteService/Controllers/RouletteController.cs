@@ -23,7 +23,7 @@ namespace RouletteService.Controllers
                     "min_bet Decimal(10,2) NOT NULL, " +
                     "PRIMARY KEY (id))");
             }
-            
+            //comment
         }
         //[HttpPost("/post/user")]
         //public void SaveUser([FromQuery] long inputone, [FromQuery] long inputtwo, [FromQuery] long output)
