@@ -9,12 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGatewayService", "ApiGat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4145887B-D84B-4645-BCF7-6AA0781FC48B}"
 	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Frontend", "FrontEnd\Frontend.csproj", "{F319F7D4-EBE4-4E06-A649-84EE93F89004}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedModels", "SharedModels\SharedModels.csproj", "{CF01AAD8-ED68-4514-8DED-F900CB90F43E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedModels", "SharedModels\SharedModels.csproj", "{CF01AAD8-ED68-4514-8DED-F900CB90F43E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouletteService", "RouletteService\RouletteService.csproj", "{92DB8523-EF7B-48BF-A588-51902EF8BD48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +41,10 @@ Global
 		{CF01AAD8-ED68-4514-8DED-F900CB90F43E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF01AAD8-ED68-4514-8DED-F900CB90F43E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF01AAD8-ED68-4514-8DED-F900CB90F43E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92DB8523-EF7B-48BF-A588-51902EF8BD48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92DB8523-EF7B-48BF-A588-51902EF8BD48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92DB8523-EF7B-48BF-A588-51902EF8BD48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92DB8523-EF7B-48BF-A588-51902EF8BD48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

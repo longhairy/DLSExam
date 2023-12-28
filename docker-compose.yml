@@ -32,5 +32,16 @@ services:
     volumes:
       - user_data:/userdata
 
+  roulette-db:
+    image: "mysql"
+    environment:
+      MYSQL_DATABASE: "roulette-database"
+      MYSQL_USER: "roulettedb"
+      MYSQL_PASSWORD: "C@ch3d1v"
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - roulette_data:/roulettedata
+
 volumes:
   user_data:
+  roulette_data:  
