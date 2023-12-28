@@ -44,6 +44,12 @@ namespace FrontEnd.Controllers
 
 
 
+        public IActionResult Addbalance()
+        {
+            return View();
+        }
+
+
 
 
 

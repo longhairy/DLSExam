@@ -3,6 +3,7 @@ using MySqlConnector;
 using System.Data;
 using Dapper;
 using SharedModels;
+using System.Data.Common;
 
 namespace UserService.Controllers
 {
@@ -60,5 +61,25 @@ namespace UserService.Controllers
 
             return NotFound("User not found or incorrect password");
         }
+
+
+        [HttpPost("/post/change-balance")]
+        public ActionResult ChangeUserBalance([FromQuery] string email, [FromQuery] double amount)
+        {
+            // Ensure the balance cannot go below 0
+            var newBalance = Math.Max(0, GetUserBalance(email) + amount);
+
+            userDBConnection.ExecuteAsync("UPDATE users SET balance = @newBalance WHERE email = @email",
+                new { email, newBalance });
+
+            return Ok(new { newBalance });
+        }
+
+        private double GetUserBalance(string email)
+        {
+            return userDBConnection.QueryFirstOrDefault<double>("SELECT balance FROM users WHERE email = @email", new { email });
+        }
+
+
     }
 }
