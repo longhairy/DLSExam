@@ -23,13 +23,15 @@ namespace RouletteService.Controllers
                     "description VARCHAR(100) NOT NULL, " +
                     "PRIMARY KEY (game_type_id))");
             }
-                GameDBConnection.Execute("REPLACE INTO " +
+            if(game_type_tables.Count()==0) 
+            {   GameDBConnection.Execute("REPLACE INTO " +
                   "game_type (name,description)" +
                   "values ('Roulette','A game where a ball is spinned around a disc, and lands on a random number between 1 and 36')");
                 GameDBConnection.Execute("REPLACE INTO " +
                  "game_type (name,description)" +
                  "values ('BlackJack','A game of cards where the goal is to get the highest value not passing 21')");
-            
+            }
+
 
 
             var bet_type_tables = GameDBConnection.Query<string>("SHOW TABLES LIKE 'bet_type'");
