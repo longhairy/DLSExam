@@ -4,16 +4,38 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+- main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'windows-latest' # or 'ubuntu-latest' for Linux
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+    - script: |
+        echo Build steps
+      displayName: 'Build'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- stage: Test
+  jobs:
+  - job: Test
+    steps:
+    - script: |
+        # Install Newman globally
+        npm install -g newman
+      displayName: 'Install Newman'
+
+    - script: |
+        # Run Postman collection using Newman
+        newman run path/to/your/PostmanCollection.json
+      displayName: 'Run Postman Collection'
+
+- stage: Deploy
+  jobs:
+  - job: Deploy
+    steps:
+    - script: |
+        echo Deployment steps
+      displayName: 'Deploy'
