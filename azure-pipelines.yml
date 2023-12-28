@@ -29,7 +29,8 @@ stages:
 
     - script: |
         # Run Postman collection using Newman
-        newman run C:\Users\londo\source\repos\PBA\DLS\DLSExam\Postman\DLSExam.postman_collection.json
+        cd $(System.DefaultWorkingDirectory)/DLSExam/Postman
+        newman run DLSExam.postman_collection.json
       displayName: 'Run Postman Collection'
 
 - stage: Deploy
