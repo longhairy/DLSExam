@@ -23,9 +23,13 @@ namespace RouletteService.Controllers
                     "description VARCHAR(100) NOT NULL, " +
                     "PRIMARY KEY (game_type_id))");
             }
-            GameDBConnection.Execute("INSERT INTO " +
-                   "game_type (name,description)" +
-                   "values ('Roulette','A game where a ball is spinned around a disc, and lands on a random number between 1 and 36')");
+                GameDBConnection.Execute("REPLACE INTO " +
+                  "game_type (name,description)" +
+                  "values ('Roulette','A game where a ball is spinned around a disc, and lands on a random number between 1 and 36')");
+                GameDBConnection.Execute("REPLACE INTO " +
+                 "game_type (name,description)" +
+                 "values ('BlackJack','A game of cards where the goal is to get the highest value not passing 21')");
+            
 
 
             var bet_type_tables = GameDBConnection.Query<string>("SHOW TABLES LIKE 'bet_type'");
@@ -75,14 +79,9 @@ namespace RouletteService.Controllers
         public IActionResult GetGameTypes()
         {
             // Retrieve the user's bet history from the database
-            var gameTypes = GameDBConnection.Query<String>("SELECT * FROM game_type");
-
-            // Return the bet history as JSON (you can customize this based on your needs)
-            //return Json(gameTypes);
-
-         
-
-            // Return a JsonResult with the JSON object
+            var gameTypes = GameDBConnection.Query<string>("SELECT Name,Description FROM game_type");
+            
+       
             return new JsonResult(gameTypes);
         }
         [HttpPost("/Post/bet")]
