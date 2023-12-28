@@ -29,7 +29,7 @@ stages:
 
     - script: |
         # Run Postman collection using Newman
-        newman run path/to/your/PostmanCollection.json
+        newman run C:\Users\londo\source\repos\PBA\DLS\DLSExam\Postman\DLSExam.postman_collection.json
       displayName: 'Run Postman Collection'
 
 - stage: Deploy
