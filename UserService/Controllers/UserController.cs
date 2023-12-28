@@ -23,22 +23,29 @@ namespace UserService.Controllers
                     "email VARCHAR(50) NOT NULL, " +
                     "password VARCHAR(50) NOT NULL, " +
                     "cpr INT NOT NULL, " +
-                    "name VARCHAR(MAX) NOT NULL, " +
+                    "name VARCHAR(50) NOT NULL, " +
                     "balance DECIMAL(15,2) NOT NULL, " +
                     "PRIMARY KEY (id))");
+
+                userDBConnection.ExecuteAsync("REPLACE INTO users (email, password, cpr, name, balance) VALUES ('test@email.com', 'password123', 123321, 'navnet', 33.00)");
             }
         }
         [HttpPost("/post/user")]
-        public void SaveUser([FromQuery] long inputone, [FromQuery] long inputtwo, [FromQuery] long output)
+        public void SaveUser([FromQuery] string email, [FromQuery] string password, [FromQuery] int cpr, [FromQuery] string name, [FromQuery] double balance)
         {
             // TODO: update parameters 
-            userDBConnection.ExecuteAsync("REPLACE INTO users (inputone, inputtwo, output, operation) VALUES (@inputone, @inputtwo, @output, 'addition')", new { inputone = inputone, inputtwo = inputtwo, output = output, operation = "addition" });
+            userDBConnection.ExecuteAsync("REPLACE INTO users (email, password, cpr, name, balance) VALUES (@email, @password, @cpr, @name, @balance)",
+            new { email = email, password = password, cpr = cpr, name = name, balance = balance });
         }
 
-        //[HttpGet("/get/user")]
-        //public async Task<ActionResult<List<User>>> GetUser()
-        //{ 
+        [HttpGet("/get/users")]
+        public async Task<ActionResult<List<User>>> GetUser()
+        {
+            var usersHistory = await userDBConnection.QueryAsync<User>("SELECT * FROM users"); // WHERE operation = 'multiplication'
 
-        //}
-     }
+
+            return Ok(usersHistory);
+
+        }
+    }
 }
