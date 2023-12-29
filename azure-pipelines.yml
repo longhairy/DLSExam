@@ -15,9 +15,9 @@ stages:
   - job: Build
     steps:
     - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      version: '3.x'
+      inputs:
+        packageType: 'sdk'
+        version: '3.x'
 
     - script: |
       # Install Docker
@@ -28,7 +28,7 @@ stages:
 
       # Build and run Docker Compose
       docker-compose up --build -d
-      displayName: 'Build and run Docker Compose'
+    displayName: 'Build and run Docker Compose'
 - stage: Test
   jobs:
   - job: Test
