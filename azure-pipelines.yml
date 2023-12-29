@@ -29,9 +29,7 @@ stages:
 
     - script: |
         # Run Postman collection using Newman
-        echo "Working Directory: $(System.DefaultWorkingDirectory)/YourSolutionFolder/postman"
-        echo "Environment Variables: $(env)"
-       
+              
         newman run Postman/DLSExam.postman_collection.json
       displayName: 'Run Postman Collection'
 
