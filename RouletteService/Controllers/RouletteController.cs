@@ -114,7 +114,7 @@ namespace RouletteService.Controllers
         public IActionResult GetGameTypes()
         {
             // Retrieve the user's bet history from the database
-            var gameTypes = GameDBConnection.Query<string>("SELECT Name,Description FROM game_type");
+            var gameTypes = GameDBConnection.Query<GameType>("SELECT Name,Description FROM game_type");
 
 
             return new JsonResult(gameTypes);
@@ -124,7 +124,7 @@ namespace RouletteService.Controllers
         public IActionResult GetBetTypes()
         {
             // Retrieve the user's bet history from the database
-            var betTypes = GameDBConnection.Query<string>("SELECT FROM bet_type");
+            var betTypes = GameDBConnection.Query<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet FROM bet_type");
 
 
             return new JsonResult(betTypes);
