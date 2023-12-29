@@ -32,7 +32,7 @@ namespace RouletteService.Controllers
                  "values ('BlackJack','A game of cards where the goal is to get the highest value not passing 21')");
             }
              
-
+             
 
             var bet_type_tables = GameDBConnection.Query<string>("SHOW TABLES LIKE 'bet_type'");
             if (!bet_type_tables.Any())
