@@ -23,16 +23,17 @@ namespace RouletteService.Controllers
                     "description VARCHAR(100) NOT NULL, " +
                     "PRIMARY KEY (game_type_id))");
             }
-            if(game_type_tables.Count()==0) 
-            {   GameDBConnection.Execute("REPLACE INTO " +
+            if (game_type_tables.Count() == 0)
+            {
+                GameDBConnection.Execute("REPLACE INTO " +
                   "game_type (name,description)" +
                   "values ('Roulette','A game where a ball is spinned around a disc, and lands on a random number between 1 and 36')");
                 GameDBConnection.Execute("REPLACE INTO " +
                  "game_type (name,description)" +
                  "values ('BlackJack','A game of cards where the goal is to get the highest value not passing 21')");
             }
-             
-             
+
+
 
             var bet_type_tables = GameDBConnection.Query<string>("SHOW TABLES LIKE 'bet_type'");
             if (!bet_type_tables.Any())
@@ -62,6 +63,38 @@ namespace RouletteService.Controllers
                     "values ('Exact Number',36,10,1)");
 
             }
+
+
+            var game_bet_type_tables = GameDBConnection.Query<string>("SHOW TABLES LIKE 'game_bet_type'");
+            if (!bet_type_tables.Any())
+            {
+                GameDBConnection.Execute("CREATE TABLE game_bet_type (" +
+                    "game_bet_type_id INT NOT NULL AUTO_INCREMENT," +
+                    "game_id INT NOT NULL, " +
+                    "bet_type_id INT NOT NULL, " +
+                    "PRIMARY KEY (game_bet_type_id)," +
+                    "FOREIGN KEY (game_id) REFERENCES game_type(game_type_id)," +
+                    "FOREIGN KEY (bet_type_id) REFERENCES bet_type(bet_type_id))");
+
+                GameDBConnection.Execute("INSERT INTO " +
+                    "game_bet_type (game_id, bet_type_id)" +
+                    "values (1, 1)");
+                GameDBConnection.Execute("INSERT INTO " +
+                    "game_bet_type (game_id, bet_type_id)" +
+                    "values (1, 2)");
+                GameDBConnection.Execute("INSERT INTO " +
+                    "game_bet_type (game_id, bet_type_id)" +
+                    "values (1, 3)");
+                GameDBConnection.Execute("INSERT INTO " +
+                    "game_bet_type (game_id, bet_type_id)" +
+                    "values (1, 4)");
+                GameDBConnection.Execute("INSERT INTO " +
+                    "game_bet_type (game_id, bet_type_id)" +
+                    "values (1, 5)");
+
+            }
+
+
             var roulette_tables = GameDBConnection.Query<string>("SHOW TABLES LIKE 'roulette_game'");
             if (!roulette_tables.Any())
             {
@@ -82,10 +115,22 @@ namespace RouletteService.Controllers
         {
             // Retrieve the user's bet history from the database
             var gameTypes = GameDBConnection.Query<string>("SELECT Name,Description FROM game_type");
-            
-       
+
+
             return new JsonResult(gameTypes);
         }
+
+        [HttpGet("/get/bet_types")]
+        public IActionResult GetBetTypes()
+        {
+            // Retrieve the user's bet history from the database
+            var betTypes = GameDBConnection.Query<string>("SELECT FROM bet_type");
+
+
+            return new JsonResult(betTypes);
+        }
+
+
         [HttpPost("/Post/bet")]
         public double PostBet([FromQuery] int uid, [FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number)
         {
@@ -95,7 +140,7 @@ namespace RouletteService.Controllers
             //game.Spin();
             // Retrieve the user's bet history from the database
             var betTypes = GameDBConnection.Query<RouletteGame>("SELECT * FROM roulette_game");
-            
+
             // Return the bet history as JSON (you can customize this based on your needs)
             return 0;
 
