@@ -1,8 +1,53 @@
 ﻿@{
     ViewData["Title"] = "Roulette";
 }
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
 
-<h1>Roulette Game</h1>
+    h1 {
+        color: #333;
+    }
+
+    #gameInfo,
+    #betTypes,
+    #betTypeStats,
+    label {
+        margin-bottom: 10px;
+        display: block;
+    }
+
+
+    #gameInfo {
+        text-align: center;
+    }
+
+    #betTypeStats {
+        border: 1px solid gray;
+    }
+
+    select,
+    input {
+        margin-bottom: 20px;
+    }
+
+    button {
+        padding: 10px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+        button:hover {
+            background-color: #45a049;
+        }
+</style>
 
 <div id="gameInfo">
     <!-- Game info will be displayed here -->
@@ -15,13 +60,6 @@
     </select>
 </div>
 
-<div>
-    <label for="betAmount">Bet Amount:</label>
-    <input type="number" id="betAmount" min="1" value="1">
-</div>
-
-<button onclick="spin()">Spin</button>
-
 <div id="betTypes">
     <!-- Stats for the selected bet type will be displayed here -->
 </div>
@@ -30,6 +68,12 @@
     <!-- Stats for the selected bet type will be displayed here -->
 </div>
 
+<div>
+    <label for="betAmount">Bet Amount:</label>
+    <input type="number" id="betAmount" min="1" value="1">
+</div>
+
+<button onclick="spin()">Spin</button>
 
 <script>
     // Fetch roulette game info
@@ -52,9 +96,8 @@
     // Display roulette game info
     function displayGameInfo(rouletteGame) {
         var gameInfoElement = document.getElementById('gameInfo');
-        gameInfoElement.innerHTML = `<p>Game: ${rouletteGame.name}</p>
-                                                 <p>Description: ${rouletteGame.description}</p>
-                                             <p>Id: ${rouletteGame.gameTypeId}</p>`;
+        gameInfoElement.innerHTML = `<h1>Game: ${rouletteGame.name}</h1>
+                                    <p>Description: ${rouletteGame.description}</p>`;
     }
 
     // Fetch bet types associated with the roulette game
