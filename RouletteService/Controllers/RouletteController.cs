@@ -21,16 +21,17 @@ namespace RouletteService.Controllers
                     "game_type_id INT NOT NULL AUTO_INCREMENT," +
                     "name VARCHAR(50) NOT NULL, " +
                     "description VARCHAR(100) NOT NULL, " +
+                    "url VARCHAR(100) NOT NULL, " +
                     "PRIMARY KEY (game_type_id))");
             }
             if (game_type_tables.Count() == 0)
             {
                 GameDBConnection.Execute("REPLACE INTO " +
-                  "game_type (name,description)" +
-                  "values ('Roulette','A game where a ball is spinned around a disc, and lands on a random number between 1 and 36')");
+                  "game_type (name,description,url)" +
+                  "values ('Roulette','A game where a ball is spinned around a disc, and lands on a random number between 1 and 36','/roulette')");
                 GameDBConnection.Execute("REPLACE INTO " +
-                 "game_type (name,description)" +
-                 "values ('BlackJack','A game of cards where the goal is to get the highest value not passing 21')");
+                 "game_type (name,description,url)" +
+                 "values ('BlackJack','A game of cards where the goal is to get the highest value not passing 21','/blackjack')");
             }
 
 
@@ -114,10 +115,24 @@ namespace RouletteService.Controllers
         public IActionResult GetGameTypes()
         {
             // Retrieve the user's bet history from the database
-            var gameTypes = GameDBConnection.Query<GameType>("SELECT Name,Description FROM game_type");
+            var gameTypes = GameDBConnection.Query<GameType>("SELECT Name, Description, url FROM game_type");
 
 
             return new JsonResult(gameTypes);
+        }
+
+        [HttpGet("/get/game_type/{id}")]
+        public IActionResult GetRouletteGame(int id)
+        {
+            // Retrieve the roulette game based on the provided ID
+            var rouletteGame = GameDBConnection.QueryFirstOrDefault<GameType>("SELECT game_type_id as GameTypeId, Name, Description, url FROM game_type WHERE game_type_id = @Id", new { Id = id });
+
+            if (rouletteGame == null)
+            {
+                return NotFound(); // Return 404 Not Found if the roulette game with the given ID is not found
+            }
+
+            return new JsonResult(rouletteGame);
         }
 
         [HttpGet("/get/bet_types")]
@@ -129,6 +144,42 @@ namespace RouletteService.Controllers
 
             return new JsonResult(betTypes);
         }
+
+
+        [HttpGet("/get/bet_type/{id}")]
+        public IActionResult GetBetType(int id)
+        {
+            // Retrieve the bet type based on the provided ID
+            var betType = GameDBConnection.QueryFirstOrDefault<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type WHERE bet_type_id = @Id", new { Id = id });
+
+            if (betType == null)
+            {
+                return NotFound(); // Return 404 Not Found if the bet type with the given ID is not found
+            }
+
+            return new JsonResult(betType);
+        }
+
+        [HttpGet("/get/game_bet_types")]
+        public IActionResult GetGameBetTypes()
+        {
+            // Retrieve the user's bet history from the database
+            var gameBetTypes = GameDBConnection.Query<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type");
+
+
+            return new JsonResult(gameBetTypes);
+        }
+
+        [HttpGet("/get/game_bet_types/{gameId}")]
+        public IActionResult GetGameBetTypesByGameId(int gameId)
+        {
+            // Retrieve game_bet_types based on the provided game_id
+            var gameBetTypes = GameDBConnection.Query<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type WHERE game_id = @GameId", new { GameId = gameId });
+
+            return new JsonResult(gameBetTypes);
+        }
+
+
 
 
         [HttpPost("/Post/bet")]

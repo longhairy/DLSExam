@@ -1,0 +1,144 @@
+﻿@{
+    ViewData["Title"] = "Roulette";
+}
+
+<h1>Roulette Game</h1>
+
+<div id="gameInfo">
+    <!-- Game info will be displayed here -->
+</div>
+
+<div>
+    <label for="betTypeDropdown">Select Bet Type:</label>
+    <select id="betTypeDropdown" onchange="updateStats()">
+        <!-- Bet types will be displayed here -->
+    </select>
+</div>
+
+<div>
+    <label for="betAmount">Bet Amount:</label>
+    <input type="number" id="betAmount" min="1" value="1">
+</div>
+
+<button onclick="spin()">Spin</button>
+
+<div id="betTypes">
+    <!-- Stats for the selected bet type will be displayed here -->
+</div>
+
+<div id="betTypeStats">
+    <!-- Stats for the selected bet type will be displayed here -->
+</div>
+
+
+<script>
+    // Fetch roulette game info
+    fetch('http://localhost:9002/get/game_type/1')
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to fetch roulette game information.');
+            }
+        })
+        .then(rouletteGame => {
+            displayGameInfo(rouletteGame);
+            fetchBetTypes(rouletteGame.gameTypeId);
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+        });
+
+    // Display roulette game info
+    function displayGameInfo(rouletteGame) {
+        var gameInfoElement = document.getElementById('gameInfo');
+        gameInfoElement.innerHTML = `<p>Game: ${rouletteGame.name}</p>
+                                                 <p>Description: ${rouletteGame.description}</p>
+                                             <p>Id: ${rouletteGame.gameTypeId}</p>`;
+    }
+
+    // Fetch bet types associated with the roulette game
+    function fetchBetTypes(gameId) {
+        fetch(`http://localhost:9002/get/game_bet_types/${gameId}`)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to fetch bet types information.');
+                }
+            })
+            .then(betTypes => {
+                displayBetTypes(betTypes);
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+            });
+    }
+
+    // Display bet types in the dropdown
+    function displayBetTypes(betTypes) {
+        var betTypeDropdown = document.getElementById('betTypeDropdown');
+
+        // Clear existing options
+        betTypeDropdown.innerHTML = '';
+
+        // Fetch detailed information for each bet_type and populate the dropdown
+        betTypes.forEach(betType => {
+            fetch(`http://localhost:9002/get/bet_type/${betType.betTypeId}`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Failed to fetch detailed bet type information.');
+                    }
+                })
+                .then(detailedBetType => {
+                    var option = document.createElement('option');
+                    option.value = detailedBetType.betTypeId;
+                    option.text = detailedBetType.name;
+                    betTypeDropdown.appendChild(option);
+                })
+                .catch(error => {
+                    console.error('Error:', error.message);
+                });
+        });
+
+        // Update stats when the page loads with the first bet type
+        updateStats();
+    }
+
+    // Update stats when the user selects a different bet type
+    function updateStats() {
+        var selectedBetTypeId = document.getElementById('betTypeDropdown').value;
+
+        fetch(`http://localhost:9002/get/bet_type/${selectedBetTypeId}`)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to fetch detailed bet type information.');
+                }
+            })
+            .then(detailedBetType => {
+                // Display detailed information for the selected bet type
+                var betTypeStatsElement = document.getElementById('betTypeStats');
+                betTypeStatsElement.innerHTML = `<h2>${detailedBetType.name} Stats</h2>
+                                                   <p>Multiplier: ${detailedBetType.multiplier}</p>
+                                                   <p>Min Bet: ${detailedBetType.minBet}</p>
+                                                   <p>Max Bet: ${detailedBetType.maxBet}</p>`;
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+            });
+    }
+
+    // Function to handle spin logic (you can implement this later)
+    function spin() {
+        // Implement your spin logic here
+        // You can use the selected bet type ID and bet amount for processing
+        var selectedBetTypeId = document.getElementById('betTypeDropdown').value;
+        var betAmount = document.getElementById('betAmount').value;
+
+        console.log(`Spinning with Bet Type ID: ${selectedBetTypeId}, Bet Amount: ${betAmount}`);
+    }
+</script>
