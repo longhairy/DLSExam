@@ -24,7 +24,7 @@ stages:
         # docker login -u $(dockerUsername) -p $(dockerPassword) $(dockerRegistry)
 
         # Build and run Docker Compose
-        docker-compose up roulette-service -d
+        docker-compose up -d roulette-service 
       displayName: 'Build and run Docker Compose'
 - stage: Test
   jobs:
