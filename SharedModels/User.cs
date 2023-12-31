@@ -11,6 +11,9 @@
 
         public double Balance { get; set; }
 
-        
+        public override string ToString()
+        {
+            return $"Id: {Id}, Email: {Email}, Password: {Password}, Cpr: {Cpr}, Name: {Name}, Balance: {Balance}";
+        }
     }
 }

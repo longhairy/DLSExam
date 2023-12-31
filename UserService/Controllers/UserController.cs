@@ -53,6 +53,7 @@ namespace UserService.Controllers
             MonitorService.Log.Debug("UserController GetUser, Start");
             var usersHistory = await userDBConnection.QueryAsync<User>("SELECT * FROM users");
 
+            MonitorService.Log.Debug("UserController GetUser, usersHistory: [" + usersHistory.ToString() + "], at Return");
 
             return Ok(usersHistory);
 
@@ -61,15 +62,17 @@ namespace UserService.Controllers
         [HttpGet("/get/user")]
         public ActionResult GetUserByEmail([FromQuery] string email, [FromQuery] string password)
         {
-            MonitorService.Log.Debug("UserController GetUserByEmail, email:"+email+ ", password:"+password+", Start");
+            MonitorService.Log.Debug("UserController GetUserByEmail, email: "+email+ ", password: "+password+", Start");
 
             var user = userDBConnection.QueryFirstOrDefault<User>("SELECT * FROM users WHERE email = @email", new { email });
 
             if (user != null && user.Password == password)
             {
+                MonitorService.Log.Debug("UserController GetUserByEmail, user: ["+user.ToString()+"], email: " + email + ", password: " + password + ", at Return");
                 return Ok(user);
             }
 
+            MonitorService.Log.Warning("User not found or password incorrect, email: "+email+", password: "+password+", at Return");
             return NotFound("User not found or incorrect password");
         }
 
@@ -77,19 +80,20 @@ namespace UserService.Controllers
         [HttpPost("/post/change-balance")]
         public ActionResult ChangeUserBalance([FromQuery] string email, [FromQuery] double amount)
         {
-            MonitorService.Log.Debug("UserController ChangeUserBalance, email:" + email + ", amount:" + amount + ", Start");
+            MonitorService.Log.Debug("UserController ChangeUserBalance, email: " + email + ", amount: " + amount + ", Start");
             // Ensure the balance cannot go below 0
             var newBalance = Math.Max(0, GetUserBalance(email) + amount);
 
             userDBConnection.ExecuteAsync("UPDATE users SET balance = @newBalance WHERE email = @email",
                 new { email, newBalance });
+            MonitorService.Log.Debug("UserController ChangeUserBalance, email: " + email + ", amount: " + amount + ", newBalance: " + newBalance +", at return");
 
             return Ok(new { newBalance });
         }
 
         private double GetUserBalance(string email)
         {
-            MonitorService.Log.Debug("UserController GetUserBalance, email:" + email + ", Start");
+            MonitorService.Log.Debug("UserController GetUserBalance, email: " + email + ", Start");
 
             return userDBConnection.QueryFirstOrDefault<double>("SELECT balance FROM users WHERE email = @email", new { email });
         }
