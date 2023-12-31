@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouletteService", "Roulette
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrontEnd", "FrontEnd\FrontEnd.csproj", "{4E74D29E-9D15-4A6C-B7BB-F2FD8807DA6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring", "Monitoring\Monitoring.csproj", "{7BC8CF89-78A5-4246-A7D4-BC0199795984}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{4E74D29E-9D15-4A6C-B7BB-F2FD8807DA6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E74D29E-9D15-4A6C-B7BB-F2FD8807DA6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E74D29E-9D15-4A6C-B7BB-F2FD8807DA6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BC8CF89-78A5-4246-A7D4-BC0199795984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BC8CF89-78A5-4246-A7D4-BC0199795984}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BC8CF89-78A5-4246-A7D4-BC0199795984}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BC8CF89-78A5-4246-A7D4-BC0199795984}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
