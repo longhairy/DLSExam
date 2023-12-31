@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using Monitoring;
 using MySqlConnector;
 using SharedModels;
 using System.Data;
@@ -12,6 +13,8 @@ namespace RouletteService.Controllers
 
         public RouletteController()
         {
+            MonitorService.Log.Debug("RouletteController Constructor Start");
+
             GameDBConnection.Open();
 
             var game_type_tables = GameDBConnection.Query<string>("SHOW TABLES LIKE 'game_type'");
@@ -114,6 +117,7 @@ namespace RouletteService.Controllers
         [HttpGet("/get/game_types")]
         public IActionResult GetGameTypes()
         {
+            MonitorService.Log.Debug("RouletteController, GetGameTypes, Start");
             // Retrieve the user's bet history from the database
             var gameTypes = GameDBConnection.Query<GameType>("SELECT Name, Description, url FROM game_type");
 
@@ -124,6 +128,8 @@ namespace RouletteService.Controllers
         [HttpGet("/get/game_type/{id}")]
         public IActionResult GetRouletteGame(int id)
         {
+            MonitorService.Log.Debug("RouletteController, GetRouletteGame, id: "+id+", Start");
+
             // Retrieve the roulette game based on the provided ID
             var rouletteGame = GameDBConnection.QueryFirstOrDefault<GameType>("SELECT game_type_id as GameTypeId, Name, Description, url FROM game_type WHERE game_type_id = @Id", new { Id = id });
 
@@ -138,6 +144,8 @@ namespace RouletteService.Controllers
         [HttpGet("/get/bet_types")]
         public IActionResult GetBetTypes()
         {
+            MonitorService.Log.Debug("RouletteController, GetBetTypes, Start");
+
             // Retrieve the user's bet history from the database
             var betTypes = GameDBConnection.Query<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet FROM bet_type");
 
@@ -149,6 +157,8 @@ namespace RouletteService.Controllers
         [HttpGet("/get/bet_type/{id}")]
         public IActionResult GetBetType(int id)
         {
+            MonitorService.Log.Debug("RouletteController, GetBetType, id: "+id+", Start");
+
             // Retrieve the bet type based on the provided ID
             var betType = GameDBConnection.QueryFirstOrDefault<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type WHERE bet_type_id = @Id", new { Id = id });
 
@@ -163,6 +173,7 @@ namespace RouletteService.Controllers
         [HttpGet("/get/game_bet_types")]
         public IActionResult GetGameBetTypes()
         {
+            MonitorService.Log.Debug("RouletteController, GetGameBetTypes, Start");
             // Retrieve the user's bet history from the database
             var gameBetTypes = GameDBConnection.Query<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type");
 
@@ -173,6 +184,8 @@ namespace RouletteService.Controllers
         [HttpGet("/get/game_bet_types/{gameId}")]
         public IActionResult GetGameBetTypesByGameId(int gameId)
         {
+            MonitorService.Log.Debug("RouletteController, GetGameBetTypesByGameId, id: "+gameId+", Start");
+
             // Retrieve game_bet_types based on the provided game_id
             var gameBetTypes = GameDBConnection.Query<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type WHERE game_id = @GameId", new { GameId = gameId });
 
@@ -185,6 +198,7 @@ namespace RouletteService.Controllers
         [HttpPost("/Post/bet")]
         public double PostBet([FromQuery] int uid, [FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number)
         {
+            MonitorService.Log.Debug("RouletteController, PostBet, uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ", Start");
 
             //Task<double>
             //RouletteGame game = new RouletteGame(uid, bet_type, bet_amount,bet_number);
