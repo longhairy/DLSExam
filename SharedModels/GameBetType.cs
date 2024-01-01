@@ -18,7 +18,10 @@ namespace SharedModels
         [Column("bet_type_id")]
         public int BetTypeId { get; set; }
 
-
+        public override string ToString()
+        {
+            return $"GameBetTypeId: {GameBetTypeId}, GameId: {GameId}, BetTypeId: {BetTypeId}";
+        }
 
     }
 }

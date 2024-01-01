@@ -33,13 +33,16 @@ namespace UserService.Controllers
                     "balance DECIMAL(15,2) NOT NULL, " +
                     "PRIMARY KEY (id))");
 
-                userDBConnection.ExecuteAsync("REPLACE INTO users (email, password, cpr, name, balance) VALUES ('test@email.com', 'password123', 123321, 'navnet', 33.00)");
-                userDBConnection.ExecuteAsync("REPLACE INTO users (email, password, cpr, name, balance) VALUES ('1@1.dk', '123', 123, 'MyName', 10)");
+                userDBConnection.Execute("REPLACE INTO users (email, password, cpr, name, balance) VALUES ('test@email.com', 'password123', 123321, 'navnet', 33.00)");
+                userDBConnection.Execute("REPLACE INTO users (email, password, cpr, name, balance) VALUES ('1@1.dk', '123', 123, 'MyName', 10)");
             }
+            MonitorService.Log.Debug("UserController Constructor, End");
+
         }
         [HttpPost("/post/user")]
         public void SaveUser([FromQuery] string email, [FromQuery] string password, [FromQuery] int cpr, [FromQuery] string name, [FromQuery] double balance)
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("UserController SaveUser, email: "+email+ ", password: "+password+ ", cpr: "+cpr+ ", name: "+name+ ", balance: "+balance+", Start");
 
             // TODO: update parameters 
@@ -50,6 +53,7 @@ namespace UserService.Controllers
         [HttpGet("/get/users")]
         public async Task<ActionResult<List<User>>> GetUser()
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("UserController GetUser, Start");
             var usersHistory = await userDBConnection.QueryAsync<User>("SELECT * FROM users");
 
@@ -62,6 +66,7 @@ namespace UserService.Controllers
         [HttpGet("/get/user")]
         public ActionResult GetUserByEmail([FromQuery] string email, [FromQuery] string password)
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("UserController GetUserByEmail, email: "+email+ ", password: "+password+", Start");
 
             var user = userDBConnection.QueryFirstOrDefault<User>("SELECT * FROM users WHERE email = @email", new { email });
@@ -80,6 +85,7 @@ namespace UserService.Controllers
         [HttpPost("/post/change-balance")]
         public ActionResult ChangeUserBalance([FromQuery] string email, [FromQuery] double amount)
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("UserController ChangeUserBalance, email: " + email + ", amount: " + amount + ", Start");
             // Ensure the balance cannot go below 0
             var newBalance = Math.Max(0, GetUserBalance(email) + amount);
@@ -93,6 +99,7 @@ namespace UserService.Controllers
 
         private double GetUserBalance(string email)
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("UserController GetUserBalance, email: " + email + ", Start");
 
             return userDBConnection.QueryFirstOrDefault<double>("SELECT balance FROM users WHERE email = @email", new { email });

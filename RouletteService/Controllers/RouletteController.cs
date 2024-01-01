@@ -13,6 +13,7 @@ namespace RouletteService.Controllers
 
         public RouletteController()
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController Constructor Start");
 
             GameDBConnection.Open();
@@ -117,10 +118,12 @@ namespace RouletteService.Controllers
         [HttpGet("/get/game_types")]
         public IActionResult GetGameTypes()
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetGameTypes, Start");
             // Retrieve the user's bet history from the database
             var gameTypes = GameDBConnection.Query<GameType>("SELECT Name, Description, url FROM game_type");
 
+            MonitorService.Log.Debug("RouletteController, GetGameTypes, no of GameTypes: "+gameTypes.Count()+", at Return");
 
             return new JsonResult(gameTypes);
         }
@@ -128,6 +131,7 @@ namespace RouletteService.Controllers
         [HttpGet("/get/game_type/{id}")]
         public IActionResult GetRouletteGame(int id)
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetRouletteGame, id: "+id+", Start");
 
             // Retrieve the roulette game based on the provided ID
@@ -135,8 +139,11 @@ namespace RouletteService.Controllers
 
             if (rouletteGame == null)
             {
+                MonitorService.Log.Debug("RouletteController, GetRouletteGame, rouletteGame: " + rouletteGame + ", at Return");
+
                 return NotFound(); // Return 404 Not Found if the roulette game with the given ID is not found
             }
+            MonitorService.Log.Debug("RouletteController, GetRouletteGame, rouletteGame: " + rouletteGame + ", at Return");
 
             return new JsonResult(rouletteGame);
         }
@@ -144,11 +151,13 @@ namespace RouletteService.Controllers
         [HttpGet("/get/bet_types")]
         public IActionResult GetBetTypes()
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetBetTypes, Start");
 
             // Retrieve the user's bet history from the database
             var betTypes = GameDBConnection.Query<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet FROM bet_type");
 
+            MonitorService.Log.Debug("RouletteController, GetBetTypes, BetType: ["+betTypes.ToString()+"], Start");
 
             return new JsonResult(betTypes);
         }
@@ -157,15 +166,19 @@ namespace RouletteService.Controllers
         [HttpGet("/get/bet_type/{id}")]
         public IActionResult GetBetType(int id)
         {
-            MonitorService.Log.Debug("RouletteController, GetBetType, id: "+id+", Start");
+            using var activity = MonitorService.ActivitySource.StartActivity();
+            MonitorService.Log.Debug("RouletteController, GetBetType(int id), id: "+id+", Start");
 
             // Retrieve the bet type based on the provided ID
             var betType = GameDBConnection.QueryFirstOrDefault<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type WHERE bet_type_id = @Id", new { Id = id });
 
             if (betType == null)
             {
+                MonitorService.Log.Debug("RouletteController, GetBetType, id: " + id + ", at Return");
+
                 return NotFound(); // Return 404 Not Found if the bet type with the given ID is not found
             }
+            MonitorService.Log.Debug("RouletteController, GetBetType, id: " + id + ", Bettype: " + betType.ToString() + ", at Return");
 
             return new JsonResult(betType);
         }
@@ -173,10 +186,12 @@ namespace RouletteService.Controllers
         [HttpGet("/get/game_bet_types")]
         public IActionResult GetGameBetTypes()
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetGameBetTypes, Start");
             // Retrieve the user's bet history from the database
             var gameBetTypes = GameDBConnection.Query<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type");
 
+            MonitorService.Log.Debug("RouletteController, GetGameBetTypes, GameBetType: ["+gameBetTypes.ToString()+"], at Return");
 
             return new JsonResult(gameBetTypes);
         }
@@ -184,10 +199,13 @@ namespace RouletteService.Controllers
         [HttpGet("/get/game_bet_types/{gameId}")]
         public IActionResult GetGameBetTypesByGameId(int gameId)
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetGameBetTypesByGameId, id: "+gameId+", Start");
 
             // Retrieve game_bet_types based on the provided game_id
             var gameBetTypes = GameDBConnection.Query<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type WHERE game_id = @GameId", new { GameId = gameId });
+            
+            MonitorService.Log.Debug("RouletteController, GetGameBetTypesByGameId, id: " + gameId + ", GameBetType: ["+gameBetTypes.ToString()+"], at Return");
 
             return new JsonResult(gameBetTypes);
         }
@@ -198,16 +216,52 @@ namespace RouletteService.Controllers
         [HttpPost("/Post/bet")]
         public double PostBet([FromQuery] int uid, [FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number)
         {
+            //TODO finish method.
+            using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, PostBet, uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ", Start");
+
+            Random random = new Random();
+            var actualSpinResult = random.Next(1, 37);
+            var sql = $"SELECT * FROM bet_type where bet_type_id = {bet_type}";
+            BetType betType = (BetType)GameDBConnection.Query<BetType>(sql);
+            double winnings = 0;
+            switch(betType.Name)
+            {
+                case "High":
+                    if (actualSpinResult > 18)
+                        winnings = bet_amount * (double)betType.Multiplier;
+                    break;
+                case "Low":
+                    if (actualSpinResult <= 18)
+                        winnings = bet_amount * (double)betType.Multiplier;
+                    break;
+                case "Even":
+                    if (actualSpinResult % 0 == 0)
+                        winnings = bet_amount * (double)betType.Multiplier;
+                    break;
+                case "Odd":
+                    if (actualSpinResult % 0 == 1)
+                        winnings = bet_amount * (double)betType.Multiplier;
+                    break;
+                case "Exact Number":
+                    if (actualSpinResult == bet_number)
+                        winnings = bet_amount * (double)betType.Multiplier;
+                    break;
+
+
+
+            }
+            return winnings;
+
+
 
             //Task<double>
             //RouletteGame game = new RouletteGame(uid, bet_type, bet_amount,bet_number);
             //game.Spin();
             // Retrieve the user's bet history from the database
-            var betTypes = GameDBConnection.Query<RouletteGame>("SELECT * FROM roulette_game");
 
             // Return the bet history as JSON (you can customize this based on your needs)
-            return 0;
+            
 
         }
     }
