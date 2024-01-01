@@ -24,7 +24,7 @@ stages:
         # docker login -u $(dockerUsername) -p $(dockerPassword) $(dockerRegistry)
 
         # Build and run Docker Compose
-        docker-compose up -d --build
+        docker-compose up -d
       displayName: 'Build and run Docker Compose'
 - stage: Test
   jobs:
