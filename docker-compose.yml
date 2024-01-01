@@ -41,6 +41,7 @@ services:
 
   roulette-db:
     image: "mysql"
+    platform: linux/amd64
     environment:
       MYSQL_DATABASE: "roulette-database"
       MYSQL_USER: "roulettedb"
