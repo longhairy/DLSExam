@@ -232,22 +232,27 @@ namespace RouletteService.Controllers
                 switch (betType.Name)
                 {
                     case "High":
+                        MonitorService.Log.Debug("RouletteController, PostBet, inside switch at High, actualSpinResult: "+actualSpinResult);
                         if (actualSpinResult > 18)
                             winnings = bet_amount * (double)betType.Multiplier;
                         break;
                     case "Low":
+                        MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Low, actualSpinResult: " + actualSpinResult);
                         if (actualSpinResult <= 18)
                             winnings = bet_amount * (double)betType.Multiplier;
                         break;
                     case "Even":
+                        MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Even, actualSpinResult: " + actualSpinResult);
                         if (actualSpinResult % 2 == 0)
                             winnings = bet_amount * (double)betType.Multiplier;
                         break;
                     case "Odd":
+                        MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Odd, actualSpinResult: " + actualSpinResult);
                         if (actualSpinResult % 2 == 1)
                             winnings = bet_amount * (double)betType.Multiplier;
                         break;
                     case "Exact Number":
+                        MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Exact Number, actualSpinResult: " + actualSpinResult+", bet_number: "+bet_number);
                         if (actualSpinResult == bet_number)
                             winnings = bet_amount * (double)betType.Multiplier;
                         break;
