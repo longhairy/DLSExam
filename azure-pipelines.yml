@@ -14,7 +14,17 @@ stages:
   jobs:
   - job: Build
     steps:
+ 
+- stage: Test
+  jobs:
+  - job: Test
+    steps:
     - script: |
+        # Install Newman globally
+        npm install -g newman
+      displayName: 'Install Newman'
+
+   - script: |
         echo Build steps
 
         # Install Docker Compose
@@ -29,14 +39,6 @@ stages:
         docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' s_roulette-service_1
 
       displayName: 'Build and run Docker Compose'
-- stage: Test
-  jobs:
-  - job: Test
-    steps:
-    - script: |
-        # Install Newman globally
-        npm install -g newman
-      displayName: 'Install Newman'
 
     - script: |
         # Run Postman collection using Newman.
