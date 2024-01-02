@@ -26,6 +26,10 @@ stages:
         # Build and run Docker Compose
         docker-compose up --build -d
         docker container ls
+        docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' roulette-service
+        docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' s_roulette-service
+        docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' s_roulette-service_1
+
       displayName: 'Build and run Docker Compose'
 - stage: Test
   jobs:
