@@ -24,7 +24,7 @@ stages:
         npm install -g newman
       displayName: 'Install Newman'
 
-   - script: |
+    - script: |
         echo Build steps
 
         # Install Docker Compose
