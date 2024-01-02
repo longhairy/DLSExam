@@ -26,10 +26,6 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"insecureHTTPParser": false,
-				"followAuthorizationHeader": false
-			},
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -44,7 +40,8 @@
 					{
 						"key": "",
 						"value": "",
-						"type": "text"
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"url": {
@@ -103,13 +100,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://0.0.0.0:9002/Get/game_types",
+					"raw": "http://roulette-service:9002/Get/game_types",
 					"protocol": "http",
 					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
+						"roulette-service"
 					],
 					"port": "9002",
 					"path": [
