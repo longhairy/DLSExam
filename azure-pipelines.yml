@@ -25,6 +25,7 @@ stages:
 
         # Build and run Docker Compose
         docker-compose up -d
+        docker container ls
       displayName: 'Build and run Docker Compose'
 - stage: Test
   jobs:
