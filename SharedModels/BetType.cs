@@ -23,5 +23,9 @@ namespace SharedModels
 
         [Column("min_bet")]
         public decimal MinBet { get; set; }
+        public override string ToString()
+        {
+            return $"BetTypeId: {BetTypeId}, Name: {Name}, Multiplier: {Multiplier}, MaxBet: {MaxBet}, MinBet: {MinBet}";
+        }
     }
 }

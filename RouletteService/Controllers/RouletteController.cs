@@ -221,16 +221,13 @@ namespace RouletteService.Controllers
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, PostBet, uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ", Start");
             
+            double winnings = 0;
             Random random = new Random();
             var actualSpinResult = random.Next(1, 37);
-            var sql = $"SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type where bet_type_id = {bet_type}";
-            MonitorService.Log.Debug("before db");
+            
+            var betType = GameDBConnection.QueryFirstOrDefault<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type WHERE bet_type_id = @Id", new { Id = bet_type });
 
-            BetType betType = (BetType)GameDBConnection.Query<BetType>(sql);
-
-            MonitorService.Log.Debug("after db");
-            double winnings = 0;
-            if(bet_amount<=(double)betType.MaxBet && bet_amount >= (double)betType.MinBet)
+            if (bet_amount<=(double)betType.MaxBet && bet_amount >= (double)betType.MinBet)
             {
                 switch (betType.Name)
                 {
@@ -243,11 +240,11 @@ namespace RouletteService.Controllers
                             winnings = bet_amount * (double)betType.Multiplier;
                         break;
                     case "Even":
-                        if (actualSpinResult % 0 == 0)
+                        if (actualSpinResult % 2 == 0)
                             winnings = bet_amount * (double)betType.Multiplier;
                         break;
                     case "Odd":
-                        if (actualSpinResult % 0 == 1)
+                        if (actualSpinResult % 2 == 1)
                             winnings = bet_amount * (double)betType.Multiplier;
                         break;
                     case "Exact Number":
@@ -261,7 +258,7 @@ namespace RouletteService.Controllers
                 MonitorService.Log.Warning("Bet outside of Max or Min limits");
             }
 
-            MonitorService.Log.Debug("RouletteController, PostBet, uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ",Actual spin: "+actualSpinResult+" at Return");
+            MonitorService.Log.Debug("RouletteController, PostBet, actualSpin: "+actualSpinResult+", uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ",Actual spin: "+actualSpinResult+" at Return");
 
             return winnings;
 

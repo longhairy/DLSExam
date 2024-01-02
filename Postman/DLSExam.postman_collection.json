@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "eec6cdb3-e841-4eb2-a724-7b7091d071c4",
+		"_postman_id": "47a90df7-895a-4b03-a36c-0ea8a97aceb8",
 		"name": "DLS Exam",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "18980399"
+		"_exporter_id": "23496046",
+		"_collection_link": "https://blue-rocket-739466.postman.co/workspace/System-Integration~937f4ea1-10bb-4be5-8092-9a79444625e3/collection/23496046-47a90df7-895a-4b03-a36c-0ea8a97aceb8?action=share&source=collection_link&creator=23496046"
 	},
 	"item": [
 		{
@@ -45,18 +46,93 @@
 					}
 				],
 				"url": {
-					"raw": "http://172.17.0.1:9002/Get/game_types",
+					"raw": "http://localhost:9002/Get/game_types",
 					"protocol": "http",
 					"host": [
-						"172",
-						"17",
-						"0",
-						"1"
+						"localhost"
 					],
 					"port": "9002",
 					"path": [
 						"Get",
 						"game_types"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostBet from RouletteService",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Valid Response: Either 0 or 6\", function () {\r",
+							"    pm.response.to.have.status(200); // Assuming a successful response status\r",
+							"    \r",
+							"    // Assuming the response body is a string\r",
+							"    var responseBody = pm.response.text();\r",
+							"    \r",
+							"    // Check if the response body is either '0' or '6'\r",
+							"    pm.expect(responseBody === '0' || responseBody === '6').to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "conte",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9002/Post/bet?bet_type=2&bet_amount=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9002",
+					"path": [
+						"Post",
+						"bet"
+					],
+					"query": [
+						{
+							"key": "bet_type",
+							"value": "2"
+						},
+						{
+							"key": "bet_amount",
+							"value": "3"
+						}
 					]
 				}
 			},
@@ -103,13 +179,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://172.17.0.1:9002/Get/game_types",
+					"raw": "http://s_roulette-service_1:9002/Get/game_types",
 					"protocol": "http",
 					"host": [
-						"172",
-						"17",
-						"0",
-						"1"
+						"s_roulette-service_1"
 					],
 					"port": "9002",
 					"path": [
