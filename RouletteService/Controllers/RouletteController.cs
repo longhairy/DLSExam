@@ -220,11 +220,15 @@ namespace RouletteService.Controllers
             //TODO finish method.
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, PostBet, uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ", Start");
-
+            
             Random random = new Random();
             var actualSpinResult = random.Next(1, 37);
-            var sql = $"SELECT * FROM bet_type where bet_type_id = {bet_type}";
+            var sql = $"SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type where bet_type_id = {bet_type}";
+            MonitorService.Log.Debug("before db");
+
             BetType betType = (BetType)GameDBConnection.Query<BetType>(sql);
+
+            MonitorService.Log.Debug("after db");
             double winnings = 0;
             if(bet_amount<=(double)betType.MaxBet && bet_amount >= (double)betType.MinBet)
             {
