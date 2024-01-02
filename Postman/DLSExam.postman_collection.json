@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "47a90df7-895a-4b03-a36c-0ea8a97aceb8",
 		"name": "DLS Exam",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23496046",
 		"_collection_link": "https://blue-rocket-739466.postman.co/workspace/System-Integration~937f4ea1-10bb-4be5-8092-9a79444625e3/collection/23496046-47a90df7-895a-4b03-a36c-0ea8a97aceb8?action=share&source=collection_link&creator=23496046"
 	},
@@ -17,6 +17,17 @@
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
+							"pm.test(\"Response has 'code' property\", function () {\r",
+							"    // Assuming the response body is in JSON format\r",
+							"    var jsonData = pm.response.json();\r",
+							"    \r",
+							"    // Check if the 'code' property exists\r",
+							"    pm.expect(jsonData).to.have.property('code');\r",
+							"    \r",
+							"    // Add additional assertions for the value of 'code' if needed\r",
+							"    // For example, assuming 'code' should be a number\r",
+							"    pm.expect(jsonData.code).to.be.a('number');\r",
+							"});\r",
 							"pm.test(\"result [Roulette,BlackJack]\", function () {\r",
 							"    pm.response.to.have.body('[\"Roulette\",\"BlackJack\"]');\r",
 							"});\r",
@@ -28,7 +39,7 @@
 			],
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "basic"
 				},
 				"method": "GET",
 				"header": [
@@ -44,7 +55,18 @@
 						"disabled": true
 					}
 				],
-				"url": "http://localhost:9002/Get/game_types"
+				"url": {
+					"raw": "http://localhost:9002/Get/game_types",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9002",
+					"path": [
+						"Get",
+						"game_types"
+					]
+				}
 			},
 			"response": []
 		},
@@ -73,7 +95,7 @@
 			},
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "basic"
 				},
 				"method": "GET",
 				"header": [
@@ -88,16 +110,31 @@
 						"type": "text"
 					}
 				],
-				"url": "http://RouletteService:9002/Get/game_types"
+				"url": {
+					"raw": "http://RouletteService:9002/Get/game_types",
+					"protocol": "http",
+					"host": [
+						"RouletteService"
+					],
+					"port": "9002",
+					"path": [
+						"Get",
+						"game_types"
+					]
+				}
 			},
 			"response": []
 		}
 	],
 	"auth": {
 		"type": "oauth2",
-		"oauth2": {
-			"addTokenTo": "queryParams"
-		}
+		"oauth2": [
+			{
+				"key": "addTokenTo",
+				"value": "queryParams",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{
