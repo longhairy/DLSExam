@@ -45,10 +45,13 @@
 					}
 				],
 				"url": {
-					"raw": "http://s_roulette-service:9002/Get/game_types",
+					"raw": "http://172.17.0.1:9002/Get/game_types",
 					"protocol": "http",
 					"host": [
-						"s_roulette-service"
+						"172",
+						"17",
+						"0",
+						"1"
 					],
 					"port": "9002",
 					"path": [
