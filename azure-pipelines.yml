@@ -14,6 +14,10 @@ stages:
   jobs:
   - job: Build
     steps:
+    - script: |
+       echo Hello
+      displayName: 'building'
+
  
 - stage: Test
   jobs:
