@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'windows-latest' # or 'ubuntu-latest' for Linux
+  vmImage: 'ubuntu-latest' # or 'ubuntu-latest' for Linux
 
 stages:
 - stage: Build
