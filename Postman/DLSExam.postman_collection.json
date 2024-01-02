@@ -45,10 +45,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://roulette-service:9002/Get/game_types",
+					"raw": "http://roulette-service_1:9002/Get/game_types",
 					"protocol": "http",
 					"host": [
-						"roulette-service"
+						"roulette-service_1"
 					],
 					"port": "9002",
 					"path": [
@@ -100,10 +100,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://roulette-service:9002/Get/game_types",
+					"raw": "http://roulette-service_1:9002/Get/game_types",
 					"protocol": "http",
 					"host": [
-						"roulette-service"
+						"roulette-service_1"
 					],
 					"port": "9002",
 					"path": [
