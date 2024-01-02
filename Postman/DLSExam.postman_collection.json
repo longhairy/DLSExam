@@ -63,7 +63,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Game Types From GateWay",
+			"name": "Get Game Types From RouletteService",
 			"event": [
 				{
 					"listen": "test",
@@ -81,14 +81,32 @@
 					}
 				}
 			],
+			"protocolProfileBehavior": {
+				"insecureHTTPParser": false,
+				"followAuthorizationHeader": false
+			},
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "conte",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://localhost:9002/Get/game_types",
+					"raw": "http://roulette-service:9002/Get/game_types",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"roulette-service"
 					],
 					"port": "9002",
 					"path": [
