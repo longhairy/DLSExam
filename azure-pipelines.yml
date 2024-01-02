@@ -24,7 +24,7 @@ stages:
         # docker login -u $(dockerUsername) -p $(dockerPassword) $(dockerRegistry)
 
         # Build and run Docker Compose
-        docker-compose up -d
+        docker-compose up --build -d
         docker container ls
       displayName: 'Build and run Docker Compose'
 - stage: Test
@@ -41,7 +41,7 @@ stages:
 
         # rerun Docker Compose
         docker-compose down
-        docker-compose up
+        docker-compose up -d
         docker container ls
       displayName: 'Rerun Docker Compose'
 
