@@ -30,7 +30,7 @@ services:
     - 9003:80
 
   user-db:
-    image: mysql:5.7-windowsservercore
+    image: mysql
     environment:
       MYSQL_DATABASE: "user-database"
       MYSQL_USER: "userdb"
