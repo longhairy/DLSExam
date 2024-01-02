@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Monitoring;
 using MySqlConnector;
@@ -225,32 +226,39 @@ namespace RouletteService.Controllers
             var sql = $"SELECT * FROM bet_type where bet_type_id = {bet_type}";
             BetType betType = (BetType)GameDBConnection.Query<BetType>(sql);
             double winnings = 0;
-            switch(betType.Name)
+            if(bet_amount<=(double)betType.MaxBet && bet_amount >= (double)betType.MinBet)
             {
-                case "High":
-                    if (actualSpinResult > 18)
-                        winnings = bet_amount * (double)betType.Multiplier;
-                    break;
-                case "Low":
-                    if (actualSpinResult <= 18)
-                        winnings = bet_amount * (double)betType.Multiplier;
-                    break;
-                case "Even":
-                    if (actualSpinResult % 0 == 0)
-                        winnings = bet_amount * (double)betType.Multiplier;
-                    break;
-                case "Odd":
-                    if (actualSpinResult % 0 == 1)
-                        winnings = bet_amount * (double)betType.Multiplier;
-                    break;
-                case "Exact Number":
-                    if (actualSpinResult == bet_number)
-                        winnings = bet_amount * (double)betType.Multiplier;
-                    break;
-
-
-
+                switch (betType.Name)
+                {
+                    case "High":
+                        if (actualSpinResult > 18)
+                            winnings = bet_amount * (double)betType.Multiplier;
+                        break;
+                    case "Low":
+                        if (actualSpinResult <= 18)
+                            winnings = bet_amount * (double)betType.Multiplier;
+                        break;
+                    case "Even":
+                        if (actualSpinResult % 0 == 0)
+                            winnings = bet_amount * (double)betType.Multiplier;
+                        break;
+                    case "Odd":
+                        if (actualSpinResult % 0 == 1)
+                            winnings = bet_amount * (double)betType.Multiplier;
+                        break;
+                    case "Exact Number":
+                        if (actualSpinResult == bet_number)
+                            winnings = bet_amount * (double)betType.Multiplier;
+                        break;
+                }
             }
+            else
+            {
+                MonitorService.Log.Warning("Bet outside of Max or Min limits");
+            }
+
+            MonitorService.Log.Debug("RouletteController, PostBet, uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ",Actual spin: "+actualSpinResult+" at Return");
+
             return winnings;
 
 
