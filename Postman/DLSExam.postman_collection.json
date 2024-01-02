@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "47a90df7-895a-4b03-a36c-0ea8a97aceb8",
+		"_postman_id": "eec6cdb3-e841-4eb2-a724-7b7091d071c4",
 		"name": "DLS Exam",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23496046",
-		"_collection_link": "https://blue-rocket-739466.postman.co/workspace/System-Integration~937f4ea1-10bb-4be5-8092-9a79444625e3/collection/23496046-47a90df7-895a-4b03-a36c-0ea8a97aceb8?action=share&source=collection_link&creator=23496046"
+		"_exporter_id": "18980399"
 	},
 	"item": [
 		{
@@ -46,10 +45,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:9002/Get/game_types",
+					"raw": "http://s_roulette-service:9002/Get/game_types",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"s_roulette-service"
 					],
 					"port": "9002",
 					"path": [
@@ -101,10 +100,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://s_roulette-service_1:9002/Get/game_types",
+					"raw": "http://s_roulette-service:9002/Get/game_types",
 					"protocol": "http",
 					"host": [
-						"s_roulette-service_1"
+						"s_roulette-service"
 					],
 					"port": "9002",
 					"path": [
