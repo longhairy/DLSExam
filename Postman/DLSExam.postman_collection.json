@@ -17,17 +17,7 @@
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
-							"pm.test(\"Response has 'code' property\", function () {\r",
-							"    // Assuming the response body is in JSON format\r",
-							"    var jsonData = pm.response.json();\r",
-							"    \r",
-							"    // Check if the 'code' property exists\r",
-							"    pm.expect(jsonData).to.have.property('code');\r",
-							"    \r",
-							"    // Add additional assertions for the value of 'code' if needed\r",
-							"    // For example, assuming 'code' should be a number\r",
-							"    pm.expect(jsonData.code).to.be.a('number');\r",
-							"});\r",
+							"\r",
 							"pm.test(\"result [Roulette,BlackJack]\", function () {\r",
 							"    pm.response.to.have.body('[\"Roulette\",\"BlackJack\"]');\r",
 							"});\r",
@@ -39,7 +29,7 @@
 			],
 			"request": {
 				"auth": {
-					"type": "basic"
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [
@@ -95,7 +85,7 @@
 			},
 			"request": {
 				"auth": {
-					"type": "basic"
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [
@@ -111,10 +101,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://RouletteService:9002/Get/game_types",
+					"raw": "http://s_roulette-service_1:9002/Get/game_types",
 					"protocol": "http",
 					"host": [
-						"RouletteService"
+						"s_roulette-service_1"
 					],
 					"port": "9002",
 					"path": [
