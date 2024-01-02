@@ -45,7 +45,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://172.18.0.4:9002/Get/game_types",
+					"raw": "http://172.18.0.2:9002/Get/game_types",
 					"protocol": "http",
 					"host": [
 						"172",
