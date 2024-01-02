@@ -31,7 +31,6 @@ services:
 
   user-db:
     image: mysql:latest
-    platform: windows/amd64
     environment:
       MYSQL_DATABASE: "user-database"
       MYSQL_USER: "userdb"
@@ -42,7 +41,6 @@ services:
 
   roulette-db:
     image: mysql:latest
-    platform: windows/amd64
     environment:
       MYSQL_DATABASE: "roulette-database"
       MYSQL_USER: "roulettedb"
