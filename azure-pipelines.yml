@@ -37,6 +37,15 @@ stages:
       displayName: 'Install Newman'
 
     - script: |
+        echo Build steps
+
+        # rerun Docker Compose
+        docker-compose down
+        docker-compose up
+        docker container ls
+      displayName: 'Rerun Docker Compose'
+
+    - script: |
         # Run Postman collection using Newman
               
         newman run Postman/DLSExam.postman_collection.json
