@@ -40,7 +40,7 @@ stages:
       displayName: 'Install Newman'
 
     - script: |
-        # Run Postman collection using Newman
+        # Run Postman collection using Newman.
               
         newman run Postman/DLSExam.postman_collection.json
       displayName: 'Run Postman Collection'
