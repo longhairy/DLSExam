@@ -19,7 +19,7 @@
 							"});\r",
 							"\r",
 							"pm.test(\"result [Roulette,BlackJack]\", function () {\r",
-							"    pm.response.to.have.body.toString('[\"Roulette\",\"BlackJack\"]');\r",
+							"    pm.response.to.have.body.toString('[\"ZRoulette\",\"BlackJack\"]');\r",
 							"});\r",
 							""
 						],
