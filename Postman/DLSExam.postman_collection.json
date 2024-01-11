@@ -19,8 +19,17 @@
 							"});\r",
 							"\r",
 							"pm.test(\"result [Roulette,BlackJack]\", function () {\r",
-							"    pm.response.to.have.body('[\"Roulette\",\"BlackJack\"]');\r",
+							"    pm.response.to.have.body.toString('[\"Roulette\",\"BlackJack\"]');\r",
 							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
 							""
 						],
 						"type": "text/javascript"
