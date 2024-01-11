@@ -14,13 +14,14 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.test('Status code is 200', function () {\r",
 							"    pm.response.to.have.status(200);\r",
-							"});\r",
+							"})\r",
 							"\r",
 							"pm.test(\"result [Roulette,BlackJack]\", function () {\r",
-							"    pm.response.to.have.body.toString('[\"ZRoulette\",\"BlackJack\"]');\r",
+							"    pm.expect(pm.response.json()).to.have.length(2);\r",
 							"});\r",
+							"\r",
 							""
 						],
 						"type": "text/javascript"

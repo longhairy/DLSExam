@@ -14,8 +14,7 @@ namespace SharedModels
         public string Url { get; set; }
         public override string ToString()
         {
-            // return $"Game Type ID: {GameTypeId}, Name: {Name}, Description: {Description}, URL: {Url}"; 
-            return Name;
+            return $"Game Type ID: {GameTypeId}, Name: {Name}, Description: {Description}, URL: {Url}"; 
         }
     }
 
