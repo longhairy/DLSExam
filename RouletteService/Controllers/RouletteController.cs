@@ -216,37 +216,37 @@ namespace RouletteService.Controllers
 
 
 
-        [HttpPost("/Post/bet")]
-        public async Task<double> PostBet([FromQuery] int uid, [FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number, [FromQuery] string email, [FromQuery] string password)
+        [HttpPost("/post/bet")]
+        public async Task<double> PostBet([FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number, [FromQuery] string email, [FromQuery] string password)
         {
             //TODO finish method.
             using var activity = MonitorService.ActivitySource.StartActivity();
-            MonitorService.Log.Debug("RouletteController, PostBet, uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ", Start");
+        //    MonitorService.Log.Debug("RouletteController, PostBet, uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ", Start");
 
             double winnings = 0;
 
+            Console.WriteLine("StartPOST BET PASSWORD: " + password);
 
             var betType = GameDBConnection.QueryFirstOrDefault<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type WHERE bet_type_id = @Id", new { Id = bet_type });
 
             User user = await getUser(email, password);
-            Console.WriteLine("Bet type name: " + betType.Name);
 
-            Console.WriteLine(user.Balance);
 
-            if (bet_amount <= (double)betType.MaxBet && bet_amount >= (double)betType.MinBet && user.Balance >= bet_amount)
+            if (user != null)
             {
-                Console.WriteLine("Bet values confirmed.");
-                winnings = getSpinResults(betType.Name, bet_amount, (double)betType.Multiplier, bet_number) - bet_amount;
-                Console.WriteLine("Winnings: " + winnings);
-                
-                await changeUserBalance(email, winnings);
+                Console.WriteLine(user.Balance);
 
-                
+                if (bet_amount <= (double)betType.MaxBet && bet_amount >= (double)betType.MinBet && user.Balance >= bet_amount)
+                {
+                    winnings = getSpinResults(betType.Name, bet_amount, (double)betType.Multiplier, bet_number) - bet_amount;
 
-            }
-            else
-            {
-                MonitorService.Log.Warning("Bet outside of Max or Min limits");
+                    await changeUserBalance(email, winnings);
+
+                }
+                else
+                {
+                    MonitorService.Log.Warning("Bet outside of Max or Min limits");
+                }
             }
 
             //MonitorService.Log.Debug("RouletteController, PostBet, actualSpin: "+actualSpinResult+", uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ",Actual spin: "+actualSpinResult+" at Return");
@@ -298,9 +298,12 @@ namespace RouletteService.Controllers
             // Set the base URL of the user service
             string userServiceBaseUrl = "http://user-service";
 
+            Console.WriteLine("User EMAIL:" +  userEmail);
+            Console.WriteLine("User userPassword:" + userPassword);
             // Construct the URL for the GetUserByEmail API
             string getUserUrl = $"{userServiceBaseUrl}/get/user?email={userEmail}&password={userPassword}";
             // Create an instance of HttpClient
+            Console.WriteLine("GetUserurl: "  + getUserUrl);
             using (HttpClient httpClient = new HttpClient())
             {
                 try
@@ -324,13 +327,13 @@ namespace RouletteService.Controllers
                     else
                     {
                         // Print an error message if the request was not successful
-                        Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                        Console.WriteLine($"Get User 1 Error: {response.StatusCode} - {response.ReasonPhrase}");
                     }
                 }
                 catch (Exception ex)
                 {
                     // Handle exceptions, e.g., network issues
-                    Console.WriteLine($"Error: {ex.Message}");
+                    Console.WriteLine($"Get User 2 Error: {ex.Message}");
                 }
             }
             return null;
@@ -363,13 +366,13 @@ namespace RouletteService.Controllers
                     else
                     {
                         // Print an error message if the request was not successful
-                        Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                        Console.WriteLine($"Change User  Error: {response.StatusCode} - {response.ReasonPhrase}");
                     }
                 }
                 catch (Exception ex)
                 {
                     // Handle exceptions, e.g., network issues
-                    Console.WriteLine($"Error: {ex.Message}");
+                    Console.WriteLine($"Change User Error: {ex.Message}");
                 }
             }
         }

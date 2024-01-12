@@ -25,8 +25,8 @@ var app = builder.Build();
 }
 
 app.UseAuthorization();
-app.UseCors(MyAllowSpecificOrigins);
 
+app.UseCors(MyAllowSpecificOrigins);
 app.MapControllers();
 
 app.Run();

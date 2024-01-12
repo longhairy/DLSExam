@@ -47,6 +47,10 @@
         button:hover {
             background-color: #45a049;
         }
+
+    .singleNumberBet{
+        display: none;
+    }
 </style>
 
 <div id="gameInfo">
@@ -69,13 +73,48 @@
 </div>
 
 <div>
+    <div class="balance">Current Balance: $<span id="balanceDisplay">0</span></div>
+
     <label for="betAmount">Bet Amount:</label>
     <input type="number" id="betAmount" min="1" value="1">
+    <div class="singleNumberBet" id="singleNumberBet">
+        <label for="betNumber">Bet on a number between 0 & 36</label>
+        <input type="number" id="betNumber" min="0" max="36" value="0"/>
+    </div>
+   
 </div>
 
 <button onclick="spin()">Spin</button>
 
+  
+
+
 <script>
+    // Retrieve user email from session cookie
+    var userEmail = getCookie('user_email');
+    var userPassword = getCookie('user_password');
+
+    // Make a request to get user information including balance
+    fetch('http://localhost:9001/get/user?email=' + userEmail + '&password=' + userPassword)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to fetch user information.');
+            }
+        })
+        .then(user => {
+            displayBalance(user.balance);
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+        });
+
+    function displayBalance(balance) {
+        // Display the user's balance on the dashboard
+        document.getElementById('balanceDisplay').innerText = balance.toFixed(2);
+    }
+
     // Fetch roulette game info
     fetch('http://localhost:9002/get/game_type/1')
         .then(response => {
@@ -165,10 +204,18 @@
             .then(detailedBetType => {
                 // Display detailed information for the selected bet type
                 var betTypeStatsElement = document.getElementById('betTypeStats');
+                var singleNumberBet = document.getElementById('singleNumberBet');
+
                 betTypeStatsElement.innerHTML = `<h2>${detailedBetType.name} Stats</h2>
                                                    <p>Multiplier: ${detailedBetType.multiplier}</p>
                                                    <p>Min Bet: ${detailedBetType.minBet}</p>
                                                    <p>Max Bet: ${detailedBetType.maxBet}</p>`;
+                if(detailedBetType.name == "Exact Number"){
+                    singleNumberBet.style.display = 'block';
+                } else {
+                    singleNumberBet.style.display = 'none';
+
+                }
             })
             .catch(error => {
                 console.error('Error:', error.message);
@@ -177,11 +224,56 @@
 
     // Function to handle spin logic (you can implement this later)
     function spin() {
-        // Implement your spin logic here
-        // You can use the selected bet type ID and bet amount for processing
-        var selectedBetTypeId = document.getElementById('betTypeDropdown').value;
-        var betAmount = document.getElementById('betAmount').value;
 
-        console.log(`Spinning with Bet Type ID: ${selectedBetTypeId}, Bet Amount: ${betAmount}`);
+        callPostBet()
+        console.log("Spin complete...")
+       // console.log(`Spinning with Bet Type ID: ${selectedBetTypeId}, Bet Amount: ${betAmount}`);
     }
+
+    async function postBet() {
+        var bet_type = document.getElementById('betTypeDropdown').value;
+        var bet_amount = document.getElementById('betAmount').value;
+        var bet_number = document.getElementById('betNumber').value;
+       // const userEmail = "1@1.dk"; // Replace with your actual user email
+       // const userPassword = "123"; // Replace with your actual user password
+
+        const postBetApiUri = `http://localhost:9002/post/bet?bet_type=${bet_type}&bet_amount=${bet_amount}&bet_number=${bet_number}&email=${encodeURIComponent(userEmail)}&password=${encodeURIComponent(userPassword)}`;
+
+        console.log(postBetApiUri);
+
+        const response = await fetch(postBetApiUri, {
+            method: 'POST',
+        });
+
+        return response.json();
+    }
+
+    async function callPostBet() {
+        postBet().then(data => {
+            console.log("DATA: " + JSON.stringify(data));
+            var prevBalance = parseFloat(document.getElementById('balanceDisplay').innerText);
+            document.getElementById('balanceDisplay').innerText = (prevBalance + data).toFixed(2);
+
+        });
+    }
+
+    /*
+    async function postBet() {
+        var bet_type = document.getElementById('betTypeDropdown').value; //bet_type
+        var bet_amount = document.getElementById('betAmount').value; //bet_amount
+        var bet_number = document.getElementById('betNumber').value; //bet_number
+        const postBetApiUri = "http://localhost:9002/post/bet?bet_type=" + bet_type + "&bet_amount=" + bet_amount + "&bet_number" + bet_number + "&email" + userEmail + "&userPassword" + userPassword;
+        //const postBetApiUri = "http://localhost:9002/post/bet?bet_type=" + 1 + "&bet_amount=" + 5 + "&bet_number" + 2 + "&email" + userEmail + "&userPassword" + userPassword;
+        const response = await fetch(postBetApiUri, {
+            method: 'POST',
+        })
+        return response.json()
+    }
+
+    async function callPostBet() {
+        postBet().then(data => {
+            //document.querySelector("#output").innerHTML = data;//.json();
+            console.log("DATA: " + data)
+        })
+    }*/
 </script>
