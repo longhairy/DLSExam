@@ -126,7 +126,7 @@ namespace RouletteService.Controllers
             // Retrieve the user's bet history from the database
             var gameTypes = GameDBConnection.Query<GameType>("SELECT Name, Description, url FROM game_type");
 
-            MonitorService.Log.Debug("RouletteController, GetGameTypes, no of GameTypes: "+gameTypes.Count()+", at Return");
+            MonitorService.Log.Debug("RouletteController, GetGameTypes, no of GameTypes: " + gameTypes.Count() + ", at Return");
 
             return new JsonResult(gameTypes);
         }
@@ -135,7 +135,7 @@ namespace RouletteService.Controllers
         public IActionResult GetRouletteGame(int id)
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
-            MonitorService.Log.Debug("RouletteController, GetRouletteGame, id: "+id+", Start");
+            MonitorService.Log.Debug("RouletteController, GetRouletteGame, id: " + id + ", Start");
 
             // Retrieve the roulette game based on the provided ID
             var rouletteGame = GameDBConnection.QueryFirstOrDefault<GameType>("SELECT game_type_id as GameTypeId, Name, Description, url FROM game_type WHERE game_type_id = @Id", new { Id = id });
@@ -160,7 +160,7 @@ namespace RouletteService.Controllers
             // Retrieve the user's bet history from the database
             var betTypes = GameDBConnection.Query<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet FROM bet_type");
 
-            MonitorService.Log.Debug("RouletteController, GetBetTypes, BetType: ["+betTypes.ToString()+"], Start");
+            MonitorService.Log.Debug("RouletteController, GetBetTypes, BetType: [" + betTypes.ToString() + "], Start");
 
             return new JsonResult(betTypes);
         }
@@ -170,7 +170,7 @@ namespace RouletteService.Controllers
         public IActionResult GetBetType(int id)
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
-            MonitorService.Log.Debug("RouletteController, GetBetType(int id), id: "+id+", Start");
+            MonitorService.Log.Debug("RouletteController, GetBetType(int id), id: " + id + ", Start");
 
             // Retrieve the bet type based on the provided ID
             var betType = GameDBConnection.QueryFirstOrDefault<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type WHERE bet_type_id = @Id", new { Id = id });
@@ -194,7 +194,7 @@ namespace RouletteService.Controllers
             // Retrieve the user's bet history from the database
             var gameBetTypes = GameDBConnection.Query<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type");
 
-            MonitorService.Log.Debug("RouletteController, GetGameBetTypes, GameBetType: ["+gameBetTypes.ToString()+"], at Return");
+            MonitorService.Log.Debug("RouletteController, GetGameBetTypes, GameBetType: [" + gameBetTypes.ToString() + "], at Return");
 
             return new JsonResult(gameBetTypes);
         }
@@ -203,12 +203,12 @@ namespace RouletteService.Controllers
         public IActionResult GetGameBetTypesByGameId(int gameId)
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
-            MonitorService.Log.Debug("RouletteController, GetGameBetTypesByGameId, id: "+gameId+", Start");
+            MonitorService.Log.Debug("RouletteController, GetGameBetTypesByGameId, id: " + gameId + ", Start");
 
             // Retrieve game_bet_types based on the provided game_id
             var gameBetTypes = GameDBConnection.Query<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type WHERE game_id = @GameId", new { GameId = gameId });
-            
-            MonitorService.Log.Debug("RouletteController, GetGameBetTypesByGameId, id: " + gameId + ", GameBetType: ["+gameBetTypes.ToString()+"], at Return");
+
+            MonitorService.Log.Debug("RouletteController, GetGameBetTypesByGameId, id: " + gameId + ", GameBetType: [" + gameBetTypes.ToString() + "], at Return");
 
             return new JsonResult(gameBetTypes);
         }
@@ -222,10 +222,10 @@ namespace RouletteService.Controllers
             //TODO finish method.
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, PostBet, uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ", Start");
-            
+
             double winnings = 0;
-         
-            
+
+
             var betType = GameDBConnection.QueryFirstOrDefault<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type WHERE bet_type_id = @Id", new { Id = bet_type });
 
             User user = await getUser(email, password);
@@ -233,12 +233,16 @@ namespace RouletteService.Controllers
 
             Console.WriteLine(user.Balance);
 
-            if (bet_amount<=(double)betType.MaxBet && bet_amount >= (double)betType.MinBet && user.Balance >= bet_amount)
+            if (bet_amount <= (double)betType.MaxBet && bet_amount >= (double)betType.MinBet && user.Balance >= bet_amount)
             {
                 Console.WriteLine("Bet values confirmed.");
-                winnings = getSpinResults(betType.Name, bet_amount, (double)betType.Multiplier, bet_number);
+                winnings = getSpinResults(betType.Name, bet_amount, (double)betType.Multiplier, bet_number) - bet_amount;
                 Console.WriteLine("Winnings: " + winnings);
-               
+                
+                await changeUserBalance(email, winnings);
+
+                
+
             }
             else
             {
@@ -313,7 +317,7 @@ namespace RouletteService.Controllers
 
                         // Deserialize the string content into a User object using JSON deserialization
                         User? user = JsonSerializer.Deserialize<User>(content);
-                  
+
                         Console.WriteLine($"User retrieved: {user}");
                         return user;
                     }
@@ -330,6 +334,44 @@ namespace RouletteService.Controllers
                 }
             }
             return null;
+        }
+
+        public async Task changeUserBalance(string email, double amount)
+        {
+            // Set the base URL of the user service
+            string userServiceBaseUrl = "http://user-service";
+
+            // Construct the URL for the GetUserByEmail API
+            string changeBalanceUrl = $"{userServiceBaseUrl}/post/change-balance?email={email}&amount={amount}";
+            // Create an instance of HttpClient
+            using (HttpClient httpClient = new HttpClient())
+            {
+                try
+                {
+                    // Make the GET request to the GetUserByEmail API
+                    HttpResponseMessage response = await httpClient.PostAsync(changeBalanceUrl, null);
+
+                    // Check if the request was successful (status code 200 OK)
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // Read the response content as a string
+                        string content = await response.Content.ReadAsStringAsync();
+
+                        // Print the new balance or handle it as needed
+                        Console.WriteLine($"New balance: {content}");
+                    }
+                    else
+                    {
+                        // Print an error message if the request was not successful
+                        Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions, e.g., network issues
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
         }
     }
 }
