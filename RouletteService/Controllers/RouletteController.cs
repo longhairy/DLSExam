@@ -5,6 +5,8 @@ using Monitoring;
 using MySqlConnector;
 using SharedModels;
 using System.Data;
+using System.Text.Json;
+
 
 namespace RouletteService.Controllers
 {
@@ -215,68 +217,119 @@ namespace RouletteService.Controllers
 
 
         [HttpPost("/Post/bet")]
-        public double PostBet([FromQuery] int uid, [FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number)
+        public async Task<double> PostBet([FromQuery] int uid, [FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number, [FromQuery] string email, [FromQuery] string password)
         {
             //TODO finish method.
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, PostBet, uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ", Start");
             
             double winnings = 0;
-            Random random = new Random();
-            var actualSpinResult = random.Next(1, 37);
+         
             
             var betType = GameDBConnection.QueryFirstOrDefault<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type WHERE bet_type_id = @Id", new { Id = bet_type });
 
-            if (bet_amount<=(double)betType.MaxBet && bet_amount >= (double)betType.MinBet)
+            User user = await getUser(email, password);
+            Console.WriteLine("Bet type name: " + betType.Name);
+
+            Console.WriteLine(user.Balance);
+
+            if (bet_amount<=(double)betType.MaxBet && bet_amount >= (double)betType.MinBet && user.Balance >= bet_amount)
             {
-                switch (betType.Name)
-                {
-                    case "High":
-                        MonitorService.Log.Debug("RouletteController, PostBet, inside switch at High, actualSpinResult: "+actualSpinResult);
-                        if (actualSpinResult > 18)
-                            winnings = bet_amount * (double)betType.Multiplier;
-                        break;
-                    case "Low":
-                        MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Low, actualSpinResult: " + actualSpinResult);
-                        if (actualSpinResult <= 18)
-                            winnings = bet_amount * (double)betType.Multiplier;
-                        break;
-                    case "Even":
-                        MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Even, actualSpinResult: " + actualSpinResult);
-                        if (actualSpinResult % 2 == 0)
-                            winnings = bet_amount * (double)betType.Multiplier;
-                        break;
-                    case "Odd":
-                        MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Odd, actualSpinResult: " + actualSpinResult);
-                        if (actualSpinResult % 2 == 1)
-                            winnings = bet_amount * (double)betType.Multiplier;
-                        break;
-                    case "Exact Number":
-                        MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Exact Number, actualSpinResult: " + actualSpinResult+", bet_number: "+bet_number);
-                        if (actualSpinResult == bet_number)
-                            winnings = bet_amount * (double)betType.Multiplier;
-                        break;
-                }
+                Console.WriteLine("Bet values confirmed.");
+                winnings = getSpinResults(betType.Name, bet_amount, (double)betType.Multiplier, bet_number);
+                Console.WriteLine("Winnings: " + winnings);
+               
             }
             else
             {
                 MonitorService.Log.Warning("Bet outside of Max or Min limits");
             }
 
-            MonitorService.Log.Debug("RouletteController, PostBet, actualSpin: "+actualSpinResult+", uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ",Actual spin: "+actualSpinResult+" at Return");
+            //MonitorService.Log.Debug("RouletteController, PostBet, actualSpin: "+actualSpinResult+", uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ",Actual spin: "+actualSpinResult+" at Return");
 
             return winnings;
 
 
 
-            //Task<double>
-            //RouletteGame game = new RouletteGame(uid, bet_type, bet_amount,bet_number);
-            //game.Spin();
-            // Retrieve the user's bet history from the database
+        }
 
-            // Return the bet history as JSON (you can customize this based on your needs)
-            
+        private double getSpinResults(string bet_name, double bet_amount, double multiplier, int bet_number)
+        {
+            Random random = new Random();
+            var actualSpinResult = random.Next(1, 37);
+            Console.WriteLine("Spin result:" + actualSpinResult);
+            switch (bet_name)
+            {
+                case "High":
+                    MonitorService.Log.Debug("RouletteController, PostBet, inside switch at High, actualSpinResult: " + actualSpinResult);
+                    if (actualSpinResult > 18)
+                        return bet_amount * multiplier;
+                    break;
+                case "Low":
+                    MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Low, actualSpinResult: " + actualSpinResult);
+                    if (actualSpinResult <= 18)
+                        return bet_amount * multiplier;
+                    break;
+                case "Even":
+                    MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Even, actualSpinResult: " + actualSpinResult);
+                    if (actualSpinResult % 2 == 0)
+                        return bet_amount * multiplier;
+                    break;
+                case "Odd":
+                    MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Odd, actualSpinResult: " + actualSpinResult);
+                    if (actualSpinResult % 2 == 1)
+                        return bet_amount * multiplier;
+                    break;
+                case "Exact Number":
+                    MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Exact Number, actualSpinResult: " + actualSpinResult + ", bet_number: " + bet_number);
+                    if (actualSpinResult == bet_number)
+                        return bet_amount * multiplier;
+                    break;
+            }
+            return 0;
+        }
 
+        public async Task<User> getUser(string userEmail, string userPassword)
+        {
+            // Set the base URL of the user service
+            string userServiceBaseUrl = "http://user-service";
+
+            // Construct the URL for the GetUserByEmail API
+            string getUserUrl = $"{userServiceBaseUrl}/get/user?email={userEmail}&password={userPassword}";
+            // Create an instance of HttpClient
+            using (HttpClient httpClient = new HttpClient())
+            {
+                try
+                {
+                    // Make the GET request to the GetUserByEmail API
+                    HttpResponseMessage response = await httpClient.GetAsync(getUserUrl);
+
+
+                    // Check if the request was successful (status code 200 OK)
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // Read the response content as a string
+                        string content = await response.Content.ReadAsStringAsync();
+
+                        // Deserialize the string content into a User object using JSON deserialization
+                        User? user = JsonSerializer.Deserialize<User>(content);
+                  
+                        Console.WriteLine($"User retrieved: {user}");
+                        return user;
+                    }
+                    else
+                    {
+                        // Print an error message if the request was not successful
+                        Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions, e.g., network issues
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+            return null;
         }
     }
 }
