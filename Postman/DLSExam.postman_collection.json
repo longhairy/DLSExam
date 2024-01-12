@@ -71,6 +71,69 @@
 			"response": []
 		},
 		{
+			"name": "Get Game Types From RouletteService servicename",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"result [Roulette,BlackJack]\", function () {\r",
+							"    pm.expect(pm.response.json()).to.have.length(2);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "conte",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://roulette-service:9002/Get/game_types",
+					"protocol": "http",
+					"host": [
+						"roulette-service"
+					],
+					"port": "9002",
+					"path": [
+						"Get",
+						"game_types"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "PostBet from RouletteService",
 			"event": [
 				{
