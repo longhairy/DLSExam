@@ -157,7 +157,7 @@ namespace ApiGatewayService.Controllers
             // Retrieve the user's bet history from the database
             using (var client = new HttpClient())
             {
-                var baseAddress = "http://roulette-service/get/game_bet_type";
+                var baseAddress = "http://roulette-service/get/game_bet_types";
                 var uri = new Uri($"{baseAddress}/{gameId}");
 
                 var response = client.GetAsync(uri).Result;
