@@ -20,7 +20,7 @@ public static class MonitorService
         Serilog.Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .Enrich.WithSpan()
-            .WriteTo.Console()
+            //.WriteTo.Console()
             .WriteTo.Seq("http://seq-service:80")
             .CreateLogger();
 
@@ -30,7 +30,7 @@ public static class MonitorService
             TracerProvider = Sdk.CreateTracerProviderBuilder()
             .AddSource(ActivitySource.Name)
             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(ServiceName))
-            .AddConsoleExporter()
+            //.AddConsoleExporter()
             .AddZipkinExporter(options =>
             {
                 options.Endpoint = new Uri("http://zipkin-service:9411/api/v2/spans");
