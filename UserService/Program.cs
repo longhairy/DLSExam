@@ -1,3 +1,6 @@
+using MySqlConnector;
+using System.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -10,6 +13,10 @@ builder.Services.AddCors(options =>
                           policy.WithOrigins("*");
                       });
 });
+
+
+builder.Services.AddScoped<IDbConnection>(_ => new MySqlConnection("Server=user-db;Database=user-database;Uid=userdb;Pwd=C@ch3d1v;"));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

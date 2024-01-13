@@ -12,14 +12,16 @@ namespace RouletteService.Controllers
 {
     public class RouletteController : Controller
     {
-        private IDbConnection GameDBConnection = new MySqlConnection("Server=roulette-db;Database=roulette-database;Uid=roulettedb;Pwd=C@ch3d1v;");
+        //private IDbConnection GameDBConnection = new MySqlConnection("Server=roulette-db;Database=roulette-database;Uid=roulettedb;Pwd=C@ch3d1v;");
+        private readonly IDbConnection GameDBConnection;
 
-        public RouletteController()
+        public RouletteController(IDbConnection gameDBConnection)
         {
+            GameDBConnection = gameDBConnection;
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController Constructor Start");
 
-            GameDBConnection.Open();
+            //GameDBConnection.Open();
 
             var game_type_tables = GameDBConnection.Query<string>("SHOW TABLES LIKE 'game_type'");
             if (!game_type_tables.Any())
