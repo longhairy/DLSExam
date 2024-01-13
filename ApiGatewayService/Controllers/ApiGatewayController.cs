@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Monitoring;
+using SharedModels;
 using System.Security.AccessControl;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ApiGatewayService.Controllers
 {
@@ -130,14 +133,18 @@ namespace ApiGatewayService.Controllers
             using (var client = new HttpClient())
             {
                 var uri = "http://roulette-service/get/game_bet_types";
-
+                //return client.GetAsync(uri);
                 var response = client.GetAsync(uri).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
+                    string jsonresult = response.Content.ReadAsStringAsync().Result;
+                    var result = response.Content.ReadAsStream();
+                    MonitorService.Log.Debug($"result :" + result);
+                    MonitorService.Log.Debug($"jsonresult :" + jsonresult);
+                    //GameBetType? GameBetType = JsonSerializer.Deserialize<GameBetType>(jsonresult);
                     MonitorService.Log.Debug($"Exiting GetGameBetTypes in ApiGatewayController");
-                    return new JsonResult(result);
+                    return new JsonResult(jsonresult);
                 }
                 else
                 {
@@ -149,7 +156,7 @@ namespace ApiGatewayService.Controllers
         }
 
         [HttpGet("/RouletteService/get/game_bet_types/{gameId}")]
-        public IActionResult GetGameBetTypesByGameId(int gameId)
+        public ActionResult<GameBetType> GetGameBetTypesByGameId(int gameId)
         {
 
             using var activity = MonitorService.ActivitySource.StartActivity();
@@ -165,8 +172,10 @@ namespace ApiGatewayService.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
+                    List<GameBetType> list = JsonSerializer.Deserialize<List<GameBetType>>(result);
+
                     MonitorService.Log.Debug($"Exiting GetGameBetTypesByGameId in ApiGatewayController uri called: " + uri.AbsoluteUri);
-                    return new JsonResult(result);
+                    return new JsonResult(list);
                 }
                 else
                 {
