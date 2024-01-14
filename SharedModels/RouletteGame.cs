@@ -11,13 +11,6 @@ namespace SharedModels
     public class RouletteGame
     {
 
-        //public RouletteGame(int uid, Enum betType, double betAmount, int betNumber)
-        //{
-        //    this.uid = uid;
-        //    this.bet_amount = bet_amount;
-        //    this.bet_number = bet_number;
-        //}
-
         [Column("gid")]
         private int gid { get; set; }
         [Column("uid")]
@@ -33,45 +26,6 @@ namespace SharedModels
         private int bet_number { get; set; }
         [Column("result")]
         public double result { get; set; }
-
-
-        //public void Spin()
-        //{
-        //    Random rand = new Random();
-        //    int spinresult = rand.Next(1,37);
-        //    bool isWinning = false;
-        //    switch(type.id)
-        //    {
-        //        case 1:
-        //            if(spinresult%0==0 && bet_amount >= type.min_bet && bet_amount <= type.max_bet)
-        //                isWinning = true;
-        //            break;
-        //        case 2:
-        //            if (spinresult % 0 == 1 && bet_amount >= type.min_bet && bet_amount <= type.max_bet)
-        //                isWinning = true;
-        //            break;
-        //        case 3:
-        //            if(spinresult >=19 && bet_amount >= type.min_bet && bet_amount <= type.max_bet)
-        //                isWinning = true;
-        //            break;
-        //        case 4:
-        //            if (spinresult <= 18 && bet_amount >= type.min_bet && bet_amount <= type.max_bet)
-        //                isWinning = true;
-        //            break;
-        //        case 5:
-        //            if(spinresult == bet_number && bet_amount >= type.min_bet && bet_amount <= type.max_bet)
-        //                isWinning = true;
-        //            break;
-        //        default:
-        //            throw new NotImplementedException();
-        //    }
-        //    if(isWinning)
-        //    {
-        //        result = bet_amount * type.multiplier;
-        //    }
-        //}
-       
-            
 
     }
 }
