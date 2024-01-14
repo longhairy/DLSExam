@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Monitoring;
 using System.Security.AccessControl;
+using SharedModels;
+using System.Text.Json;
 
 namespace ApiGatewayService.Controllers
 {
@@ -30,8 +32,10 @@ namespace ApiGatewayService.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
+                    List<GameType>? gameType = JsonSerializer.Deserialize<List<GameType>>(result);
+
                     MonitorService.Log.Debug($"Exiting GetGameTypes in ApiGatewayController");
-                    return new JsonResult(result);
+                    return new JsonResult(gameType);
                 }
                 else
                 {
@@ -56,8 +60,10 @@ namespace ApiGatewayService.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
+                    GameType? gameType = JsonSerializer.Deserialize<GameType>(result);
+
                     MonitorService.Log.Debug($"Exiting GetRouletteGame(int) in ApiGatewayController uri called: " +uri.AbsoluteUri);
-                    return new JsonResult(result);
+                    return new JsonResult(gameType);
                 }
                 else
                 {
@@ -82,8 +88,10 @@ namespace ApiGatewayService.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
+                    List<BetType>? betType = JsonSerializer.Deserialize<List<BetType>>(result);
+
                     MonitorService.Log.Debug($"Exiting GetBetTypes in ApiGatewayController");
-                    return new JsonResult(result);
+                    return new JsonResult(betType);
                 }
                 else
                 {
@@ -110,8 +118,9 @@ namespace ApiGatewayService.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
+                    BetType? betType = JsonSerializer.Deserialize<BetType>(result);
                     MonitorService.Log.Debug($"Exiting GetBetType(int) in ApiGatewayController uri called: " + uri.AbsoluteUri);
-                    return new JsonResult(result);
+                    return new JsonResult(betType);
                 }
                 else
                 {
@@ -136,8 +145,10 @@ namespace ApiGatewayService.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
+                    List<GameBetType>? game_bet_types = JsonSerializer.Deserialize<List<GameBetType>>(result);
+
                     MonitorService.Log.Debug($"Exiting GetGameBetTypes in ApiGatewayController");
-                    return new JsonResult(result);
+                    return new JsonResult(game_bet_types);
                 }
                 else
                 {
@@ -165,8 +176,10 @@ namespace ApiGatewayService.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
+                    List<GameBetType>? game_bet_types = JsonSerializer.Deserialize<List<GameBetType>>(result);
+
                     MonitorService.Log.Debug($"Exiting GetGameBetTypesByGameId in ApiGatewayController uri called: " + uri.AbsoluteUri);
-                    return new JsonResult(result);
+                    return new JsonResult(game_bet_types);
                 }
                 else
                 {
@@ -180,10 +193,41 @@ namespace ApiGatewayService.Controllers
 
 
         [HttpPost("/RouletteService/Post/bet")]
-        public double PostBet([FromQuery] int uid, [FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number)
+        public double PostBet([FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number, [FromQuery] string email, [FromQuery] string password)
         {
 
-            return 0;
+            using var activity = MonitorService.ActivitySource.StartActivity();
+            MonitorService.Log.Debug($"Entered Post Bet in ApiGatewayController");
+
+            //Kald history service post:
+            using (var client = new HttpClient())
+            {
+                var baseAddress = "http://roulette-service/post/bet";
+                var uri = new Uri($"{baseAddress}?bet_type={bet_type}&bet_amount={bet_amount}&bet_number={bet_number}&email={email}&password={password}");
+
+                var response = client.PostAsync(uri, null).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    Console.WriteLine(result);
+                    if (result != null)
+                    {
+                        // Console.WriteLine("output from response: " + output);
+                      //  MonitorService.Log.Information("output from response: " + output);
+                        return Double.Parse(result);
+                    }
+                }
+                else
+                {
+                    MonitorService.Log.Error($"API call failed with status code: {response.StatusCode}");
+                    // Console.WriteLine($"API call failed with status code: {response.StatusCode}");
+                }
+                MonitorService.Log.Debug($"Exiting PostAddition in ApiGatewayController");
+
+                // Return a default value or throw an exception based on your requirements.
+                return 0;
+            }
 
         }
 
