@@ -223,7 +223,7 @@ namespace RouletteService.Controllers
         {
             //TODO finish method.
             using var activity = MonitorService.ActivitySource.StartActivity();
-        //    MonitorService.Log.Debug("RouletteController, PostBet, uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ", Start");
+            MonitorService.Log.Debug("RouletteController, PostBet, Start");
 
             double winnings = 0;
 
@@ -241,17 +241,26 @@ namespace RouletteService.Controllers
                 if (bet_amount <= (double)betType.MaxBet && bet_amount >= (double)betType.MinBet && user.Balance >= bet_amount)
                 {
                     winnings = getSpinResults(betType.Name, bet_amount, (double)betType.Multiplier, bet_number) - bet_amount;
-
+                    if (winnings > 0)
+                    {
+                        MonitorService.Log.Information($"Win: {winnings} for user:{user.ToString()}");
+                    }
+                    else
+                    {
+                        MonitorService.Log.Information($"Loss: {Math.Abs(winnings)} for user:{user.ToString()}");
+                    }
                     await changeUserBalance(email, winnings);
 
                 }
                 else
                 {
-                    MonitorService.Log.Warning("Bet outside of Max or Min limits");
+
+                    MonitorService.Log.Warning("Bet outside of Max or Min limits or higher than user balance");
+                    MonitorService.Log.Information($"bet_amount: {bet_amount}, max: {betType.MaxBet}, min: {betType.MinBet}, balance: {user.Balance}, user: {user.ToString()}");
                 }
             }
 
-            //MonitorService.Log.Debug("RouletteController, PostBet, actualSpin: "+actualSpinResult+", uid: " + uid + ", bet_type: " + bet_type + ", bet_amount: " + bet_amount + ", bet_number: " + bet_number + ",Actual spin: "+actualSpinResult+" at Return");
+            MonitorService.Log.Debug("RouletteController, PostBet, at Return");
 
             return winnings;
 
@@ -261,42 +270,64 @@ namespace RouletteService.Controllers
 
         private double getSpinResults(string bet_name, double bet_amount, double multiplier, int bet_number)
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
+            MonitorService.Log.Debug("RouletteController, getSpinResults, Start");
+
+
             Random random = new Random();
             var actualSpinResult = random.Next(1, 37);
+            MonitorService.Log.Information($"actualSpinResult: {actualSpinResult}");
             Console.WriteLine("Spin result:" + actualSpinResult);
+            bool isWinningSpin = false;
             switch (bet_name)
             {
                 case "High":
                     MonitorService.Log.Debug("RouletteController, PostBet, inside switch at High, actualSpinResult: " + actualSpinResult);
                     if (actualSpinResult > 18)
-                        return bet_amount * multiplier;
+                        isWinningSpin = true;
                     break;
                 case "Low":
                     MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Low, actualSpinResult: " + actualSpinResult);
                     if (actualSpinResult <= 18)
-                        return bet_amount * multiplier;
+                        isWinningSpin = true;
                     break;
                 case "Even":
                     MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Even, actualSpinResult: " + actualSpinResult);
                     if (actualSpinResult % 2 == 0)
-                        return bet_amount * multiplier;
+                        isWinningSpin = true;
                     break;
                 case "Odd":
                     MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Odd, actualSpinResult: " + actualSpinResult);
                     if (actualSpinResult % 2 == 1)
-                        return bet_amount * multiplier;
+                        isWinningSpin = true;
                     break;
                 case "Exact Number":
                     MonitorService.Log.Debug("RouletteController, PostBet, inside switch at Exact Number, actualSpinResult: " + actualSpinResult + ", bet_number: " + bet_number);
                     if (actualSpinResult == bet_number)
-                        return bet_amount * multiplier;
+                        isWinningSpin = true;
                     break;
             }
-            return 0;
+            if(isWinningSpin) 
+            {
+                MonitorService.Log.Information($"Winning spin with {bet_name}, bet of {bet_amount}");
+                MonitorService.Log.Debug("RouletteController, getSpinResults, win at return");
+
+                return bet_amount * multiplier;
+            }
+            else
+            {
+
+                MonitorService.Log.Information($"Loosing spin with {bet_name}, bet of {bet_amount}");
+                MonitorService.Log.Debug("RouletteController, getSpinResults, loss at return");
+                return 0;
+            }
         }
 
         public async Task<User> getUser(string userEmail, string userPassword)
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
+            MonitorService.Log.Debug("RouletteController, getUser, Start");
+
             // Set the base URL of the user service
             string userServiceBaseUrl = "http://user-service";
 
@@ -324,17 +355,22 @@ namespace RouletteService.Controllers
                         User? user = JsonSerializer.Deserialize<User>(content);
 
                         Console.WriteLine($"User retrieved: {user}");
+                        MonitorService.Log.Information($"user successfully retrieved {user.ToString()}");
                         return user;
                     }
                     else
                     {
                         // Print an error message if the request was not successful
+                        MonitorService.Log.Warning($"user not retrieved with email: {userEmail}");
+
                         Console.WriteLine($"Get User 1 Error: {response.StatusCode} - {response.ReasonPhrase}");
                     }
                 }
                 catch (Exception ex)
                 {
                     // Handle exceptions, e.g., network issues
+                    MonitorService.Log.Error($"Exception while retrieving user Exception message {ex.Message}");
+
                     Console.WriteLine($"Get User 2 Error: {ex.Message}");
                 }
             }
