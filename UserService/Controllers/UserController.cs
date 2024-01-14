@@ -102,7 +102,7 @@ namespace UserService.Controllers
 
 
         [HttpPost("/post/change-balance")]
-        public async Task<ActionResult> ChangeUserBalance([FromQuery] string email, [FromQuery] double amount)
+        public async Task<double> ChangeUserBalance([FromQuery] string email, [FromQuery] double amount)
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("UserController ChangeUserBalance, email: " + email + ", amount: " + amount + ", Start");
@@ -114,7 +114,7 @@ namespace UserService.Controllers
                 await userDBConnection.ExecuteAsync("UPDATE users SET balance = @newBalance WHERE email = @email", new { email, newBalance });
                 MonitorService.Log.Debug("UserController ChangeUserBalance, email: " + email + ", amount: " + amount + ", newBalance: " + newBalance + ", at return");
 
-                return Ok(new { newBalance });
+            return newBalance; //Ok(new { newBalance });
             //}
         }
 

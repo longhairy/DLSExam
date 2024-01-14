@@ -224,7 +224,7 @@ namespace ApiGatewayService.Controllers
                     MonitorService.Log.Error($"API call failed with status code: {response.StatusCode}");
                     // Console.WriteLine($"API call failed with status code: {response.StatusCode}");
                 }
-                MonitorService.Log.Debug($"Exiting PostAddition in ApiGatewayController");
+                MonitorService.Log.Debug($"Exiting Post Bet in ApiGatewayController");
 
                 // Return a default value or throw an exception based on your requirements.
                 return 0;
@@ -232,7 +232,142 @@ namespace ApiGatewayService.Controllers
 
         }
 
+        [HttpPost("/userService/post/user")]
+        public async Task SaveUser([FromQuery] string email, [FromQuery] string password, [FromQuery] int cpr, [FromQuery] string name, [FromQuery] double balance)
+        {
 
+            using var activity = MonitorService.ActivitySource.StartActivity();
+            MonitorService.Log.Debug($"Entered Post User in ApiGatewayController");
+
+            //Kald history service post:
+            using (var client = new HttpClient())
+            {
+                var baseAddress = "http://user-service/post/user";
+                var uri = new Uri($"{baseAddress}?email={email}&password={password}&cpr={cpr}&name={name}&balance={balance}");
+
+                var response = await client.PostAsync(uri, null);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    Console.WriteLine(result);
+                    if (result != null)
+                    {
+                        Console.WriteLine("User created through api gateway");
+                        // Console.WriteLine("output from response: " + output);
+                        //  MonitorService.Log.Information("output from response: " + output);
+                        //return Double.Parse(result);
+                    }
+                }
+                else
+                {
+                    MonitorService.Log.Error($"API call failed with status code: {response.StatusCode}");
+                    // Console.WriteLine($"API call failed with status code: {response.StatusCode}");
+                }
+                MonitorService.Log.Debug($"Exiting Post user in ApiGatewayController");
+
+            }
+        }
+
+        [HttpPost("/userService/post/change-balance")]
+        public async Task<double> changeBalance([FromQuery] string email, [FromQuery] double amount)
+        {
+
+            using var activity = MonitorService.ActivitySource.StartActivity();
+            MonitorService.Log.Debug($"Entered change User Balance in ApiGatewayController");
+
+            //Kald history service post:
+            using (var client = new HttpClient())
+            {
+                var baseAddress = "http://user-service/post/change-balance";
+                var uri = new Uri($"{baseAddress}?email={email}&amount={amount}");
+
+                var response = await client.PostAsync(uri, null);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    Console.WriteLine(result);
+                    if (result != null)
+                    {
+                        Console.WriteLine("User balance updated through api gateway");
+                        // Console.WriteLine("output from response: " + output);
+                        //  MonitorService.Log.Information("output from response: " + output);
+                        return Double.Parse(result); //Ok(new { result }); //Double.Parse(result);
+                    }
+                }
+                else
+                {
+                    MonitorService.Log.Error($"API call failed with status code: {response.StatusCode}");
+                    // Console.WriteLine($"API call failed with status code: {response.StatusCode}");
+                }
+                MonitorService.Log.Debug($"Exiting Post Bet in ApiGatewayController");
+
+            }
+            return 0.0;
+        }
+
+
+
+        [HttpGet("/userService/get/users")]
+        public async Task<IActionResult> getUsers()
+        {
+            using var activity = MonitorService.ActivitySource.StartActivity();
+            MonitorService.Log.Debug("ApiGatewayController, getUsers, Start");
+            // Retrieve the user's bet history from the database
+            using (var client = new HttpClient())
+            {
+                var uri = "http://user-service/get/users";
+
+                var response = await client.GetAsync(uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    List<User>? users = JsonSerializer.Deserialize<List<User>>(result);
+
+                    MonitorService.Log.Debug($"Exiting getUsers in ApiGatewayController");
+                    return new JsonResult(users);
+                }
+                else
+                {
+                    MonitorService.Log.Error($"API call failed with status code: {response.StatusCode}");
+                    return BadRequest();
+                }
+            }
+
+        }
+
+
+        [HttpGet("/userService/get/user")]
+        public async Task<IActionResult> getUserByEmail([FromQuery] string email, [FromQuery] string password)
+        {
+
+            using var activity = MonitorService.ActivitySource.StartActivity();
+            MonitorService.Log.Debug("ApiGatewayController, getUserByEmail(string), Start");
+            // Retrieve the user's bet history from the database
+            using (var client = new HttpClient())
+            {
+                var baseAddress = "http://user-service/get/user";
+                var uri = new Uri($"{baseAddress}?email={email}&password={password}");
+
+                var response = await client.GetAsync(uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    User? user = JsonSerializer.Deserialize<User>(result);
+
+                    MonitorService.Log.Debug($"Exiting getUserByEmail in ApiGatewayController uri called: " + uri.AbsoluteUri);
+                    return new JsonResult(user);
+                }
+                else
+                {
+                    MonitorService.Log.Error($"API call failed with status code: {response.StatusCode}");
+                    return BadRequest();
+                }
+            }
+        }
 
 
 
