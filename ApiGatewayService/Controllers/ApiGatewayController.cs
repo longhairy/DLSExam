@@ -348,7 +348,8 @@ namespace ApiGatewayService.Controllers
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
                     User? user = JsonSerializer.Deserialize<User>(result);
-
+                    Console.WriteLine("Vi fanger denne user: ");
+                    Console.WriteLine(user.ToString());
                     MonitorService.Log.Debug($"Exiting getUserByEmail in ApiGatewayController uri called: " + uri.AbsoluteUri);
                     return new JsonResult(user);
                 }

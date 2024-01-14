@@ -221,7 +221,6 @@ namespace RouletteService.Controllers
         [HttpPost("/post/bet")]
         public async Task<double> PostBet([FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number, [FromQuery] string email, [FromQuery] string password)
         {
-            //TODO finish method.
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, PostBet, Start");
 
@@ -329,12 +328,12 @@ namespace RouletteService.Controllers
             MonitorService.Log.Debug("RouletteController, getUser, Start");
 
             // Set the base URL of the user service
-            string userServiceBaseUrl = "http://user-service";
+            string userServiceBaseUrl = "http://api-gateway-service";
 
             Console.WriteLine("User EMAIL:" +  userEmail);
             Console.WriteLine("User userPassword:" + userPassword);
             // Construct the URL for the GetUserByEmail API
-            string getUserUrl = $"{userServiceBaseUrl}/get/user?email={userEmail}&password={userPassword}";
+            string getUserUrl = $"{userServiceBaseUrl}/userService/get/user?email={userEmail}&password={userPassword}";
             // Create an instance of HttpClient
             Console.WriteLine("GetUserurl: "  + getUserUrl);
             using (HttpClient httpClient = new HttpClient())
@@ -354,13 +353,15 @@ namespace RouletteService.Controllers
                         // Deserialize the string content into a User object using JSON deserialization
                         User? user = JsonSerializer.Deserialize<User>(content);
 
+                        Console.WriteLine("Vi fanger denne user: ");
+                        Console.WriteLine(user.ToString());
+
                         Console.WriteLine($"User retrieved: {user}");
                         MonitorService.Log.Information($"user successfully retrieved {user.ToString()}");
                         return user;
                     }
                     else
                     {
-                        // Print an error message if the request was not successful
                         MonitorService.Log.Warning($"user not retrieved with email: {userEmail}");
 
                         Console.WriteLine($"Get User 1 Error: {response.StatusCode} - {response.ReasonPhrase}");
@@ -368,7 +369,6 @@ namespace RouletteService.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // Handle exceptions, e.g., network issues
                     MonitorService.Log.Error($"Exception while retrieving user Exception message {ex.Message}");
 
                     Console.WriteLine($"Get User 2 Error: {ex.Message}");
@@ -383,10 +383,10 @@ namespace RouletteService.Controllers
             MonitorService.Log.Debug("RouletteController, changeUserBalance, Start");
 
             // Set the base URL of the user service
-            string userServiceBaseUrl = "http://user-service";
+            string userServiceBaseUrl = "http://api-gateway-service";
 
             // Construct the URL for the GetUserByEmail API
-            string changeBalanceUrl = $"{userServiceBaseUrl}/post/change-balance?email={email}&amount={amount}";
+            string changeBalanceUrl = $"{userServiceBaseUrl}/userService/post/change-balance?email={email}&amount={amount}";
             // Create an instance of HttpClient
             using (HttpClient httpClient = new HttpClient())
             {
@@ -402,22 +402,17 @@ namespace RouletteService.Controllers
                         string content = await response.Content.ReadAsStringAsync();
                         MonitorService.Log.Information($"New Balance: {content}");
 
-                        // Print the new balance or handle it as needed
                         Console.WriteLine($"New balance: {content}");
                     }
                     else
                     {
                         MonitorService.Log.Warning($"Change User  Error: {response.StatusCode} - {response.ReasonPhrase}");
-
-                        // Print an error message if the request was not successful
                         Console.WriteLine($"Change User  Error: {response.StatusCode} - {response.ReasonPhrase}");
                     }
                 }
                 catch (Exception ex)
                 {
                     MonitorService.Log.Error($"Exception while retrieving user Exception message {ex.Message}");
-
-                    // Handle exceptions, e.g., network issues
                     Console.WriteLine($"Change User Error: {ex.Message}");
                 }
             }
