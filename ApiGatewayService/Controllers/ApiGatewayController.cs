@@ -214,19 +214,15 @@ namespace ApiGatewayService.Controllers
                     Console.WriteLine(result);
                     if (result != null)
                     {
-                        // Console.WriteLine("output from response: " + output);
-                      //  MonitorService.Log.Information("output from response: " + output);
                         return Double.Parse(result);
                     }
                 }
                 else
                 {
                     MonitorService.Log.Error($"API call failed with status code: {response.StatusCode}");
-                    // Console.WriteLine($"API call failed with status code: {response.StatusCode}");
                 }
                 MonitorService.Log.Debug($"Exiting Post Bet in ApiGatewayController");
 
-                // Return a default value or throw an exception based on your requirements.
                 return 0;
             }
 
@@ -254,15 +250,12 @@ namespace ApiGatewayService.Controllers
                     if (result != null)
                     {
                         Console.WriteLine("User created through api gateway");
-                        // Console.WriteLine("output from response: " + output);
-                        //  MonitorService.Log.Information("output from response: " + output);
-                        //return Double.Parse(result);
+
                     }
                 }
                 else
                 {
                     MonitorService.Log.Error($"API call failed with status code: {response.StatusCode}");
-                    // Console.WriteLine($"API call failed with status code: {response.StatusCode}");
                 }
                 MonitorService.Log.Debug($"Exiting Post user in ApiGatewayController");
 
@@ -291,15 +284,13 @@ namespace ApiGatewayService.Controllers
                     if (result != null)
                     {
                         Console.WriteLine("User balance updated through api gateway");
-                        // Console.WriteLine("output from response: " + output);
-                        //  MonitorService.Log.Information("output from response: " + output);
-                        return Double.Parse(result); //Ok(new { result }); //Double.Parse(result);
+                       
+                        return Double.Parse(result);
                     }
                 }
                 else
                 {
                     MonitorService.Log.Error($"API call failed with status code: {response.StatusCode}");
-                    // Console.WriteLine($"API call failed with status code: {response.StatusCode}");
                 }
                 MonitorService.Log.Debug($"Exiting Post Bet in ApiGatewayController");
 
