@@ -33,10 +33,8 @@ namespace ApiGatewayService.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
-                    List<GameType> list = JsonSerializer.Deserialize<List<GameType>>(result);
-
                     MonitorService.Log.Debug($"Exiting GetGameTypes in ApiGatewayController");
-                    return new JsonResult(list);
+                    return new JsonResult(result);
                 }
                 else
                 {
@@ -62,7 +60,7 @@ namespace ApiGatewayService.Controllers
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
                     MonitorService.Log.Debug($"Exiting GetRouletteGame(int) in ApiGatewayController uri called: " +uri.AbsoluteUri);
-                    return new JsonResult(JsonSerializer.Deserialize<GameType>(result));
+                    return new JsonResult(result);
                 }
                 else
                 {
@@ -87,10 +85,8 @@ namespace ApiGatewayService.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
-                    List<BetType> list = JsonSerializer.Deserialize<List<BetType>>(result);
-
                     MonitorService.Log.Debug($"Exiting GetBetTypes in ApiGatewayController");
-                    return new JsonResult(list);
+                    return new JsonResult(result);
                 }
                 else
                 {
@@ -118,7 +114,7 @@ namespace ApiGatewayService.Controllers
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
                     MonitorService.Log.Debug($"Exiting GetBetType(int) in ApiGatewayController uri called: " + uri.AbsoluteUri);
-                    return new JsonResult(JsonSerializer.Deserialize<BetType>(result));
+                    return new JsonResult(result);
                 }
                 else
                 {
@@ -142,11 +138,13 @@ namespace ApiGatewayService.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
-                    List<GameBetType> list = JsonSerializer.Deserialize<List<GameBetType>>(result);
-
+                    string jsonresult = response.Content.ReadAsStringAsync().Result;
+                    var result = response.Content.ReadAsStream();
+                    MonitorService.Log.Debug($"result :" + result);
+                    MonitorService.Log.Debug($"jsonresult :" + jsonresult);
+                    //GameBetType? GameBetType = JsonSerializer.Deserialize<GameBetType>(jsonresult);
                     MonitorService.Log.Debug($"Exiting GetGameBetTypes in ApiGatewayController");
-                    return new JsonResult(list);
+                    return new JsonResult(jsonresult);
                 }
                 else
                 {
