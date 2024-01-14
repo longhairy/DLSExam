@@ -98,7 +98,7 @@
         // For simplicity, balance is set to 0
         var balance = 0;
       
-        fetch('http://localhost:9001/post/user?email=' + email + '&password=' + password + '&cpr=' + cpr + '&name=' + name + '&balance=' + balance, {
+        fetch('http://localhost:9005/userService/post/user?email=' + email + '&password=' + password + '&cpr=' + cpr + '&name=' + name + '&balance=' + balance, {
             method: 'POST'
         })
             .then(response => {

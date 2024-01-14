@@ -83,7 +83,7 @@
         var email = document.getElementById('email').value;
         var password = document.getElementById('password').value;
 
-        fetch('http://localhost:9001/get/user?email=' + email + '&password=' + password)
+        fetch('http://localhost:9005/userService/get/user?email=' + email + '&password=' + password)
             .then(response => {
                 if (response.ok) {
                     return response.json();

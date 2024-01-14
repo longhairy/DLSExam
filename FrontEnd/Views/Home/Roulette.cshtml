@@ -95,7 +95,7 @@
     var userPassword = getCookie('user_password');
 
     // Make a request to get user information including balance
-    fetch('http://localhost:9001/get/user?email=' + userEmail + '&password=' + userPassword)
+    fetch('http://localhost:9005/userService/get/user?email=' + userEmail + '&password=' + userPassword)
         .then(response => {
             if (response.ok) {
                 return response.json();

@@ -119,7 +119,7 @@
         }
 
         // Make a request to change the user's balance
-        fetch('http://localhost:9001/post/change-balance?email=' + userEmail + '&amount=' + amount, {
+        fetch('http://localhost:9005/userService/post/change-balance?email=' + userEmail + '&amount=' + amount, {
             method: 'POST'
         })
             .then(response => {

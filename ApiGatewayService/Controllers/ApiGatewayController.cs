@@ -368,12 +368,6 @@ namespace ApiGatewayService.Controllers
                 }
             }
         }
-
-
-
-
-
-
     }
 
 }

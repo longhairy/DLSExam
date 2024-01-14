@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: UserService/Dockerfile
-    ports:
-    - 9001:80
+    deploy:
+      replicas: 2
 
   roulette-service:
     build:
