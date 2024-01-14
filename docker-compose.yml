@@ -12,8 +12,8 @@ services:
     build:
       context: .
       dockerfile: RouletteService/Dockerfile
-    ports:
-    - 9002:80
+    deploy:
+      replicas: 2
 
   api-gateway-service:
     build:

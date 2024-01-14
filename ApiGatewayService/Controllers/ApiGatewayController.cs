@@ -17,7 +17,7 @@ namespace ApiGatewayService.Controllers
 
         }
 
-        [HttpGet("/RouletteService/get/game_types")]
+        [HttpGet("/rouletteService/get/game_types")]
         public IActionResult GetGameTypes()
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
@@ -44,7 +44,7 @@ namespace ApiGatewayService.Controllers
                 }
             }
         }
-        [HttpGet("/RouletteService/get/game_type/{id}")]
+        [HttpGet("/rouletteService/get/game_type/{id}")]
         public IActionResult GetRouletteGame(int id)
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
@@ -73,7 +73,7 @@ namespace ApiGatewayService.Controllers
             }
         }
 
-        [HttpGet("/RouletteService/get/bet_types")]
+        [HttpGet("/rouletteService/get/bet_types")]
         public IActionResult GetBetTypes()
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
@@ -102,7 +102,7 @@ namespace ApiGatewayService.Controllers
         }
 
 
-        [HttpGet("/RouletteService/get/bet_type/{id}")]
+        [HttpGet("/rouletteService/get/bet_type/{id}")]
         public IActionResult GetBetType(int id)
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
@@ -130,7 +130,7 @@ namespace ApiGatewayService.Controllers
             }
         }
 
-        [HttpGet("/RouletteService/get/game_bet_types")]
+        [HttpGet("/rouletteService/get/game_bet_types")]
         public IActionResult GetGameBetTypes()
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
@@ -159,7 +159,7 @@ namespace ApiGatewayService.Controllers
 
         }
 
-        [HttpGet("/RouletteService/get/game_bet_types/{gameId}")]
+        [HttpGet("/rouletteService/get/game_bet_types/{gameId}")]
         public IActionResult GetGameBetTypesByGameId(int gameId)
         {
 
@@ -192,7 +192,7 @@ namespace ApiGatewayService.Controllers
 
 
 
-        [HttpPost("/RouletteService/Post/bet")]
+        [HttpPost("/rouletteService/post/bet")]
         public double PostBet([FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number, [FromQuery] string email, [FromQuery] string password)
         {
 
