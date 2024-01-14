@@ -86,7 +86,7 @@
     }
 
     // Fetch game data and update the dashboard
-    fetch('http://localhost:9002/get/game_types')
+    fetch('http://localhost:9005/rouletteService/get/game_types')
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -119,27 +119,16 @@
             var titleElement = document.createElement('h3');
             titleElement.innerText = game.name;
 
-            // Append the title to the anchor element
+            // Append the title to element
             gameLink.appendChild(titleElement);
 
             // Display game description
             var descriptionElement = document.createElement('p');
             descriptionElement.innerText = game.description;
 
-            // Append the description to the anchor element
+            // Append values to element
             gameLink.appendChild(descriptionElement);
-
-            // Append the anchor element to the game item
             gameItem.appendChild(gameLink);
-
-            // You can add an image element here if you have image URLs in your game data
-            // Example:
-            // var imageElement = document.createElement('img');
-            // imageElement.src = game.imageUrl;
-            // imageElement.className = 'game-image';
-            // gameItem.appendChild(imageElement);
-
-            // Append the game item to the game list
             gameListElement.appendChild(gameItem);
         });
     }

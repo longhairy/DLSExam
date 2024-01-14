@@ -116,7 +116,7 @@
     }
 
     // Fetch roulette game info
-    fetch('http://localhost:9002/get/game_type/1')
+    fetch('http://localhost:9005/rouletteService/get/game_type/1')
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -141,7 +141,7 @@
 
     // Fetch bet types associated with the roulette game
     function fetchBetTypes(gameId) {
-        fetch(`http://localhost:9002/get/game_bet_types/${gameId}`)
+        fetch(`http://localhost:9005/rouletteService/get/game_bet_types/${gameId}`)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -166,7 +166,7 @@
 
         // Fetch detailed information for each bet_type and populate the dropdown
         betTypes.forEach(betType => {
-            fetch(`http://localhost:9002/get/bet_type/${betType.betTypeId}`)
+            fetch(`http://localhost:9005/rouletteService/get/bet_type/${betType.betTypeId}`)
                 .then(response => {
                     if (response.ok) {
                         return response.json();
@@ -193,7 +193,7 @@
     function updateStats() {
         var selectedBetTypeId = document.getElementById('betTypeDropdown').value;
 
-        fetch(`http://localhost:9002/get/bet_type/${selectedBetTypeId}`)
+        fetch(`http://localhost:9005/rouletteService/get/bet_type/${selectedBetTypeId}`)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -237,7 +237,7 @@
        // const userEmail = "1@1.dk"; // Replace with your actual user email
        // const userPassword = "123"; // Replace with your actual user password
 
-        const postBetApiUri = `http://localhost:9002/post/bet?bet_type=${bet_type}&bet_amount=${bet_amount}&bet_number=${bet_number}&email=${encodeURIComponent(userEmail)}&password=${encodeURIComponent(userPassword)}`;
+        const postBetApiUri = `http://localhost:9005/rouletteService/post/bet?bet_type=${bet_type}&bet_amount=${bet_amount}&bet_number=${bet_number}&email=${encodeURIComponent(userEmail)}&password=${encodeURIComponent(userPassword)}`;
 
         console.log(postBetApiUri);
 
