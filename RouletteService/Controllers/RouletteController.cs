@@ -126,7 +126,7 @@ namespace RouletteService.Controllers
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetGameTypes, Start");
             // Retrieve the user's bet history from the database
-            var gameTypes = GameDBConnection.Query<GameType>("SELECT Name, Description, url FROM game_type");
+            var gameTypes = GameDBConnection.Query<GameType>("SELECT game_type_id as GameTypeId ,Name, Description, url FROM game_type");
 
             MonitorService.Log.Debug("RouletteController, GetGameTypes, no of GameTypes: " + gameTypes.Count() + ", at Return");
 
