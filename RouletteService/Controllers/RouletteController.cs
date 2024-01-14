@@ -121,12 +121,12 @@ namespace RouletteService.Controllers
 
         }
         [HttpGet("/get/game_types")]
-        public IActionResult GetGameTypes()
+        public async Task<IActionResult> GetGameTypes()
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetGameTypes, Start");
             // Retrieve the user's bet history from the database
-            var gameTypes = GameDBConnection.Query<GameType>("SELECT game_type_id as GameTypeId ,Name, Description, url FROM game_type");
+            var gameTypes = await GameDBConnection.QueryAsync<GameType>("SELECT game_type_id as GameTypeId ,Name, Description, url FROM game_type");
 
             MonitorService.Log.Debug("RouletteController, GetGameTypes, no of GameTypes: " + gameTypes.Count() + ", at Return");
 
@@ -134,13 +134,13 @@ namespace RouletteService.Controllers
         }
 
         [HttpGet("/get/game_type/{id}")]
-        public IActionResult GetRouletteGame(int id)
+        public async Task<IActionResult> GetRouletteGame(int id)
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetRouletteGame, id: " + id + ", Start");
 
             // Retrieve the roulette game based on the provided ID
-            var rouletteGame = GameDBConnection.QueryFirstOrDefault<GameType>("SELECT game_type_id as GameTypeId, Name, Description, url FROM game_type WHERE game_type_id = @Id", new { Id = id });
+            var rouletteGame = await GameDBConnection.QueryFirstOrDefaultAsync<GameType>("SELECT game_type_id as GameTypeId, Name, Description, url FROM game_type WHERE game_type_id = @Id", new { Id = id });
 
             if (rouletteGame == null)
             {
@@ -154,13 +154,13 @@ namespace RouletteService.Controllers
         }
 
         [HttpGet("/get/bet_types")]
-        public IActionResult GetBetTypes()
+        public async Task<IActionResult> GetBetTypes()
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetBetTypes, Start");
 
             // Retrieve the user's bet history from the database
-            var betTypes = GameDBConnection.Query<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet FROM bet_type");
+            var betTypes = await GameDBConnection.QueryAsync<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet FROM bet_type");
 
             MonitorService.Log.Debug("RouletteController, GetBetTypes, BetType: [" + betTypes.ToString() + "], Start");
 
@@ -169,13 +169,13 @@ namespace RouletteService.Controllers
 
 
         [HttpGet("/get/bet_type/{id}")]
-        public IActionResult GetBetType(int id)
+        public async Task<IActionResult> GetBetType(int id)
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetBetType(int id), id: " + id + ", Start");
 
             // Retrieve the bet type based on the provided ID
-            var betType = GameDBConnection.QueryFirstOrDefault<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type WHERE bet_type_id = @Id", new { Id = id });
+            var betType = await GameDBConnection.QueryFirstOrDefaultAsync<BetType>("SELECT bet_type_id as BetTypeId, name as Name, multiplier, max_bet as MaxBet, min_bet as MinBet  FROM bet_type WHERE bet_type_id = @Id", new { Id = id });
 
             if (betType == null)
             {
@@ -189,12 +189,12 @@ namespace RouletteService.Controllers
         }
 
         [HttpGet("/get/game_bet_types")]
-        public IActionResult GetGameBetTypes()
+        public async Task<IActionResult> GetGameBetTypes()
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetGameBetTypes, Start");
             // Retrieve the user's bet history from the database
-            var gameBetTypes = GameDBConnection.Query<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type");
+            var gameBetTypes = await GameDBConnection.QueryAsync<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type");
 
             MonitorService.Log.Debug("RouletteController, GetGameBetTypes, GameBetType: [" + gameBetTypes.ToString() + "], at Return");
 
@@ -202,13 +202,13 @@ namespace RouletteService.Controllers
         }
 
         [HttpGet("/get/game_bet_types/{gameId}")]
-        public IActionResult GetGameBetTypesByGameId(int gameId)
+        public async Task<IActionResult> GetGameBetTypesByGameId(int gameId)
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("RouletteController, GetGameBetTypesByGameId, id: " + gameId + ", Start");
 
             // Retrieve game_bet_types based on the provided game_id
-            var gameBetTypes = GameDBConnection.Query<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type WHERE game_id = @GameId", new { GameId = gameId });
+            var gameBetTypes = await GameDBConnection.QueryAsync<GameBetType>("SELECT game_bet_type_id as GameBetTypeId, game_id as GameId, bet_type_id as BetTypeId FROM game_bet_type WHERE game_id = @GameId", new { GameId = gameId });
 
             MonitorService.Log.Debug("RouletteController, GetGameBetTypesByGameId, id: " + gameId + ", GameBetType: [" + gameBetTypes.ToString() + "], at Return");
 
