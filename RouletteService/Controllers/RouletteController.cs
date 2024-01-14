@@ -379,6 +379,9 @@ namespace RouletteService.Controllers
 
         public async Task changeUserBalance(string email, double amount)
         {
+            using var activity = MonitorService.ActivitySource.StartActivity();
+            MonitorService.Log.Debug("RouletteController, changeUserBalance, Start");
+
             // Set the base URL of the user service
             string userServiceBaseUrl = "http://user-service";
 
@@ -397,18 +400,23 @@ namespace RouletteService.Controllers
                     {
                         // Read the response content as a string
                         string content = await response.Content.ReadAsStringAsync();
+                        MonitorService.Log.Information($"New Balance: {content}");
 
                         // Print the new balance or handle it as needed
                         Console.WriteLine($"New balance: {content}");
                     }
                     else
                     {
+                        MonitorService.Log.Warning($"Change User  Error: {response.StatusCode} - {response.ReasonPhrase}");
+
                         // Print an error message if the request was not successful
                         Console.WriteLine($"Change User  Error: {response.StatusCode} - {response.ReasonPhrase}");
                     }
                 }
                 catch (Exception ex)
                 {
+                    MonitorService.Log.Error($"Exception while retrieving user Exception message {ex.Message}");
+
                     // Handle exceptions, e.g., network issues
                     Console.WriteLine($"Change User Error: {ex.Message}");
                 }
