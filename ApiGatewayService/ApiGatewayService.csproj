@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Monitoring\Monitoring.csproj" />
-    <ProjectReference Include="..\SharedModels\SharedModels.csproj" />
   </ItemGroup>
 
 </Project>
