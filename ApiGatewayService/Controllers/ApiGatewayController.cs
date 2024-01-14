@@ -4,6 +4,7 @@ using System.Security.AccessControl;
 using SharedModels;
 using System.Text.Json;
 
+
 namespace ApiGatewayService.Controllers
 {
     [ApiController]
@@ -18,7 +19,7 @@ namespace ApiGatewayService.Controllers
         }
 
         [HttpGet("/rouletteService/get/game_types")]
-        public IActionResult GetGameTypes()
+        public async Task<IActionResult> GetGameTypes()
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("ApiGatewayController, GetGameTypes, Start");
@@ -27,7 +28,7 @@ namespace ApiGatewayService.Controllers
             {
                 var uri = "http://roulette-service/get/game_types";
                 
-                var response = client.GetAsync(uri).Result;
+                var response = await client.GetAsync(uri);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -45,7 +46,7 @@ namespace ApiGatewayService.Controllers
             }
         }
         [HttpGet("/rouletteService/get/game_type/{id}")]
-        public IActionResult GetRouletteGame(int id)
+        public async Task<IActionResult> GetRouletteGame(int id)
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("ApiGatewayController, GetRouletteGame(int), Start");
@@ -55,7 +56,7 @@ namespace ApiGatewayService.Controllers
                 var baseAddress = "http://roulette-service/get/game_type";
                 var uri = new Uri($"{baseAddress}/{id}");
 
-                var response = client.GetAsync(uri).Result;
+                var response = await client.GetAsync(uri);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -74,7 +75,7 @@ namespace ApiGatewayService.Controllers
         }
 
         [HttpGet("/rouletteService/get/bet_types")]
-        public IActionResult GetBetTypes()
+        public async Task<IActionResult> GetBetTypes()
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("ApiGatewayController, GetBetTypes, Start");
@@ -83,7 +84,7 @@ namespace ApiGatewayService.Controllers
             {
                 var uri = "http://roulette-service/get/bet_types";
 
-                var response = client.GetAsync(uri).Result;
+                var response = await client.GetAsync(uri);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -103,7 +104,7 @@ namespace ApiGatewayService.Controllers
 
 
         [HttpGet("/rouletteService/get/bet_type/{id}")]
-        public IActionResult GetBetType(int id)
+        public async Task<IActionResult> GetBetType(int id)
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("ApiGatewayController, GetBetType(int), Start");
@@ -113,7 +114,7 @@ namespace ApiGatewayService.Controllers
                 var baseAddress = "http://roulette-service/get/bet_type";
                 var uri = new Uri($"{baseAddress}/{id}");
 
-                var response = client.GetAsync(uri).Result;
+                var response = await client.GetAsync(uri);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -131,7 +132,7 @@ namespace ApiGatewayService.Controllers
         }
 
         [HttpGet("/rouletteService/get/game_bet_types")]
-        public IActionResult GetGameBetTypes()
+        public async Task<IActionResult> GetGameBetTypes()
         {
             using var activity = MonitorService.ActivitySource.StartActivity();
             MonitorService.Log.Debug("ApiGatewayController, GetGameBetTypes, Start");
@@ -140,7 +141,7 @@ namespace ApiGatewayService.Controllers
             {
                 var uri = "http://roulette-service/get/game_bet_types";
 
-                var response = client.GetAsync(uri).Result;
+                var response = await client.GetAsync(uri);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -160,7 +161,7 @@ namespace ApiGatewayService.Controllers
         }
 
         [HttpGet("/rouletteService/get/game_bet_types/{gameId}")]
-        public IActionResult GetGameBetTypesByGameId(int gameId)
+        public async Task<IActionResult> GetGameBetTypesByGameId(int gameId)
         {
 
             using var activity = MonitorService.ActivitySource.StartActivity();
@@ -171,7 +172,7 @@ namespace ApiGatewayService.Controllers
                 var baseAddress = "http://roulette-service/get/game_bet_types";
                 var uri = new Uri($"{baseAddress}/{gameId}");
 
-                var response = client.GetAsync(uri).Result;
+                var response = await client.GetAsync(uri);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -193,7 +194,7 @@ namespace ApiGatewayService.Controllers
 
 
         [HttpPost("/rouletteService/post/bet")]
-        public double PostBet([FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number, [FromQuery] string email, [FromQuery] string password)
+        public async Task<double> PostBet([FromQuery] int bet_type, [FromQuery] double bet_amount, [FromQuery] int bet_number, [FromQuery] string email, [FromQuery] string password)
         {
 
             using var activity = MonitorService.ActivitySource.StartActivity();
@@ -205,7 +206,7 @@ namespace ApiGatewayService.Controllers
                 var baseAddress = "http://roulette-service/post/bet";
                 var uri = new Uri($"{baseAddress}?bet_type={bet_type}&bet_amount={bet_amount}&bet_number={bet_number}&email={email}&password={password}");
 
-                var response = client.PostAsync(uri, null).Result;
+                var response = await client.PostAsync(uri, null);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -230,6 +231,8 @@ namespace ApiGatewayService.Controllers
             }
 
         }
+
+
 
 
 
